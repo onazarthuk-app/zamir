@@ -158,6 +158,26 @@ input[type=number] {
 }
 </style>
 </head>
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAc9MfX5Gufpc-VlSPt44K64idOAvAgbRY",
+    authDomain: "app-zamir.firebaseapp.com",
+    projectId: "app-zamir",
+    storageBucket: "app-zamir.firebasestorage.app",
+    messagingSenderId: "554869000957",
+    appId: "1:554869000957:web:2081a0d24176145f028c94"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  window.db = db;
+  window.addDoc = addDoc;
+  window.collection = collection;
+</script>
 <body>
  
 <div class="header">
@@ -214,8 +234,8 @@ input[type=number] {
  
 <div class="actions">
   <button class="btn btn-secondary" onclick="shareTxt()">Share</button>
-  <button class="btn btn-primary" onclick="saveManual()">💾 ЗБЕРЕГТИ</button>
-  <button class="btn btn-primary" onclick="printDoc()">Print</button>
+<button class="btn btn-primary" onclick="saveToCloud()">☁️ ЗБЕРЕГТИ</button>
+  <button class="btn btn-primary" onclick="printDoc()">ДРУК</button>
 </div>
  
 <div class="print-doc" id="printable">
@@ -300,7 +320,23 @@ function load() {
   }
   renderDoors();
 }
- 
+ async function saveToCloud() {
+  var data = {
+    date: document.getElementById('date').value,
+    client: document.getElementById('client_name').value,
+    phone: document.getElementById('client_tel').value,
+    doors: doors,
+    created: new Date()
+  };
+
+  try {
+    await addDoc(collection(db, "measurements"), data);
+    alert("✅ Збережено в CRM");
+  } catch (e) {
+    alert("❌ Помилка: " + e);
+    console.error(e);
+  }
+}
 function save() {
   var data = {
     date: document.getElementById('date').value,
