@@ -214,7 +214,7 @@ input[type=number] {
  
 <div class="actions">
   <button class="btn btn-secondary" onclick="shareTxt()">Share</button>
-  <button class="btn btn-secondary" onclick="savePDF()">PDF</button>
+  <button class="btn btn-primary" onclick="saveManual()">💾 ЗБЕРЕГТИ</button>
   <button class="btn btn-primary" onclick="printDoc()">Print</button>
 </div>
  
@@ -260,6 +260,26 @@ input[type=number] {
 </div>
  
 <script>
+  function saveManual() {
+  save(); // твоя існуюча функція
+
+  // візуальний ефект (це робить “вау”)
+  var btn = document.querySelector('.btn-primary');
+  var original = btn.innerHTML;
+
+  btn.innerHTML = '⏳ ЗБЕРІГАЄМО...';
+  btn.style.opacity = '0.7';
+
+  setTimeout(function() {
+    btn.innerHTML = '✅ ЗБЕРЕЖЕНО';
+    btn.style.opacity = '1';
+
+    setTimeout(function() {
+      btn.innerHTML = original;
+    }, 1500);
+
+  }, 800);
+}
 var doors = [];
 var doorCounter = 0;
  
