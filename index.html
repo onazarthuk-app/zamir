@@ -85,8 +85,17 @@ input[type=number] {
   -webkit-appearance: none;
   text-align: right;
 }
- 
-.radio-group { display: flex; gap: 8px; }
+ @media (max-width: 480px) {
+  .radio-btn {
+    font-size: 12px;
+    padding: 6px;
+  }
+}
+.radio-group {
+  display: flex;
+  flex-wrap: wrap; /* ← магія */
+  gap: 6px;
+}
 .radio-btn { flex: 1; padding: 8px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 8px; text-align: center; font-size: 14px; font-weight: 500; cursor: pointer; color: var(--text); }
 .radio-btn.on { background: var(--accent); color: #fff; border-color: var(--accent); }
  
