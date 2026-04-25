@@ -7,160 +7,538 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Заміри">
-<meta name="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect fill='%230066ff' width='180' height='180' rx='40'/%3E%3Cpath fill='white' d='M50 50h20v80h-20zm30 0h20v80h-20zm30 0h20v80h-20z'/%3E%3Cpath fill='white' opacity='0.7' d='M60 45h60v10h-60z'/%3E%3C/svg%3E">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect fill='%230066ff' width='180' height='180' rx='40'/%3E%3Cpath fill='white' d='M50 50h20v80h-20zm30 0h20v80h-20zm30 0h20v80h-20z'/%3E%3Cpath fill='white' opacity='0.7' d='M60 45h60v10h-60z'/%3E%3C/svg%3E">
 <title>Бланк замірів дверей</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg: #f2f2f7;
+  --bg2: #e5e5ea;
   --card: #fff;
-  --border: #e0e0e5;
+  --border: rgba(0,0,0,0.1);
   --accent: #ff3b30;
+  --accent2: #ff6961;
+  --blue: #007aff;
+  --green: #34c759;
+  --orange: #ff9500;
   --text: #1c1c1e;
   --text2: #6c6c70;
   --text3: #aeaeb2;
-  --green: #34c759;
-  --orange: #ff9500;
+  --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 24px rgba(0,0,0,0.12);
+  --r: 13px;
+  --r-sm: 10px;
 }
+
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 html { background: var(--bg); }
-body { font-family: -apple-system, sans-serif; color: var(--text); background: var(--bg); padding-bottom: 80px; }
- .title {
-  text-align: center;
-  letter-spacing: 0.5px;
+body {
+  font-family: 'Nunito', -apple-system, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  padding-bottom: 90px;
 }
+
+/* ── HEADER ── */
 .header {
-  padding: 52px 20px 16px;
-   background: #e5e5ea; /* світло-сірий як iPhone */
-  border-bottom: 1px solid var(--border);
+  padding: 54px 20px 18px;
+  background: rgba(242,242,247,0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 0.5px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 50;
   display: flex;
   flex-direction: column;
-  align-items: center;   /* ← центрує все */
-}
-.logo {
-  width: 350px; 
-  height: auto;
-  margin-bottom: 14px;
-}
-.title { font-size: 26px; font-weight: 700; margin-top: 4px; }
- 
-.section { padding: 20px; }
-.sec-title { font-size: 13px; font-weight: 600; color: var(--text2); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
- 
-.field { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; margin-bottom: 10px; }
-.field-label { font-size: 13px; color: var(--text2); margin-bottom: 6px; }
-input[type=text], input[type=date], input[type=tel], select, textarea {
-  width: 100%;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 10px 12px;
-  font-size: 16px;
-  color: var(--text);
-  font-family: -apple-system, sans-serif;
-  -webkit-appearance: none;
-}
-input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); }
- 
-.door-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 12px; }
-.door-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-.door-num { font-size: 16px; font-weight: 600; color: var(--text); }
-.door-del { font-size: 22px; color: var(--orange); cursor: pointer; padding: 4px 8px; }
- 
-.row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
- 
-.mini-field { margin-bottom: 10px; }
-.mini-label { font-size: 12px; color: var(--text2); margin-bottom: 4px; }
-input[type=number] {
-  width: 100%;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 8px 10px;
-  font-size: 15px;
-  color: var(--text);
-  font-family: -apple-system, sans-serif;
-  -webkit-appearance: none;
-  text-align: right;
-}
- @media (max-width: 480px) {
-  .radio-btn {
-    font-size: 12px;
-    padding: 6px;
-  }
-}
-.radio-group {
-  display: flex;
-  flex-wrap: wrap; /* ← магія */
+  align-items: center;
   gap: 6px;
 }
-.radio-btn { flex: 1; padding: 8px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 8px; text-align: center; font-size: 14px; font-weight: 500; cursor: pointer; color: var(--text); }
-.radio-btn.on { background: var(--accent); color: #fff; border-color: var(--accent); }
- 
-.check-group { display: flex; gap: 8px; }
-.check-box { flex: 1; padding: 8px 12px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; color: var(--text); display: flex; align-items: center; gap: 6px; }
-.check-box.on { background: var(--green); color: #fff; border-color: var(--green); }
-.check-icon { width: 16px; height: 16px; border: 2px solid currentColor; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 12px; }
-.check-box.on .check-icon { background: #fff; color: var(--green); }
- 
-.add-btn { display: block; width: 100%; padding: 14px; background: var(--card); border: 1.5px dashed var(--border); border-radius: 12px; font-size: 15px; font-weight: 600; color: var(--accent); cursor: pointer; text-align: center; margin-bottom: 20px; }
- 
-.actions { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card); border-top: 1px solid var(--border); padding: 12px 20px; padding-bottom: calc(12px + env(safe-area-inset-bottom)); display: flex; gap: 8px; }
-.btn { flex: 1; padding: 14px 8px; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; font-family: -apple-system, sans-serif; }
-.btn-primary { background: var(--accent); color: #fff; }
-.btn-secondary {
-  background: #ff3b30;
-  color: #fff;
-  border: none;
+
+.logo { width: 220px; height: auto; object-fit: contain; }
+.logo-placeholder {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: 0.5px;
 }
-  .btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+
+.page-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text2);
+  letter-spacing: 0.3px;
 }
-  .btn {
+
+/* ── SECTIONS ── */
+.section { padding: 20px 16px 4px; }
+.sec-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+  padding-left: 4px;
+}
+
+/* ── CARD ── */
+.ios-card {
+  background: var(--card);
+  border-radius: var(--r);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.ios-row {
+  display: flex;
+  align-items: center;
+  padding: 13px 16px;
+  border-bottom: 0.5px solid rgba(0,0,0,0.07);
+  gap: 10px;
+  min-height: 50px;
+}
+
+.ios-row:last-child { border-bottom: none; }
+
+.ios-row-label {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+  flex-shrink: 0;
+  min-width: 90px;
+}
+
+.ios-row-label.wide { min-width: 130px; }
+
+input[type=text], input[type=date], input[type=tel], input[type=number], select, textarea {
   flex: 1;
-  padding: 14px 8px;
-  border-radius: 12px;
+  background: none;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  font-family: 'Nunito', sans-serif;
+  color: var(--text2);
+  text-align: right;
+  padding: 0;
+  min-width: 0;
+}
+
+input::placeholder { color: var(--text3); }
+textarea {
+  text-align: left;
+  padding: 13px 16px;
+  width: 100%;
+  font-size: 15px;
+  resize: none;
+  border-radius: var(--r);
+  border: none;
+  background: none;
+}
+
+/* ── DOOR CARD ── */
+.door-card {
+  background: var(--card);
+  border-radius: var(--r);
+  box-shadow: var(--shadow);
+  margin-bottom: 14px;
+  overflow: hidden;
+}
+
+.door-card-header {
+  background: linear-gradient(135deg, var(--accent) 0%, #ff6b6b 100%);
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.door-card-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.3px;
+}
+
+.door-del-btn {
+  width: 28px;
+  height: 28px;
+  background: rgba(255,255,255,0.25);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.door-body { padding: 0; }
+
+/* ── RADIO / CHECK ── */
+.seg-ctrl {
+  display: flex;
+  background: var(--bg);
+  border-radius: 8px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.seg-btn {
+  flex: 1;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  color: var(--text2);
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.seg-btn.on {
+  background: var(--card);
+  color: var(--text);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+}
+
+.check-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 16px;
+  border-bottom: 0.5px solid rgba(0,0,0,0.07);
+}
+
+.check-row:last-child { border-bottom: none; }
+
+.check-row-label {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.ios-toggle {
+  width: 51px;
+  height: 31px;
+  background: var(--text3);
+  border-radius: 16px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+
+.ios-toggle.on { background: var(--green); }
+
+.ios-toggle::after {
+  content: '';
+  position: absolute;
+  width: 27px;
+  height: 27px;
+  background: white;
+  border-radius: 50%;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+}
+
+.ios-toggle.on::after { transform: translateX(20px); }
+
+/* ── PHOTO ── */
+.photo-zone {
+  padding: 12px 16px;
+  border-bottom: 0.5px solid rgba(0,0,0,0.07);
+}
+
+.photo-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 10px;
+}
+
+.photo-grid {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.photo-thumb {
+  width: 72px;
+  height: 72px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 0.5px solid var(--border);
+}
+
+.photo-add-btn {
+  width: 72px;
+  height: 72px;
+  border-radius: 10px;
+  border: 2px dashed var(--text3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  gap: 4px;
+  background: none;
+}
+
+.photo-add-icon {
+  font-size: 22px;
+  color: var(--blue);
+}
+
+.photo-add-text {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--blue);
+}
+
+input[type=file] { display: none; }
+
+/* ── SIGNATURE ── */
+.sig-zone {
+  padding: 12px 16px;
+  border-bottom: 0.5px solid rgba(0,0,0,0.07);
+}
+
+.sig-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 10px;
+}
+
+.sig-canvas-wrap {
+  background: var(--bg);
+  border-radius: 10px;
+  border: 1.5px dashed var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+canvas.sig-pad {
+  display: block;
+  width: 100%;
+  height: 120px;
+  touch-action: none;
+}
+
+.sig-hint {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 13px;
+  color: var(--text3);
+  pointer-events: none;
+  text-align: center;
+}
+
+.sig-hint.hidden { display: none; }
+
+.sig-clear {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  margin-top: 8px;
+  text-align: right;
+  cursor: pointer;
+  padding: 2px 0;
+}
+
+/* ── ADD BTN ── */
+.add-door-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 15px;
+  background: var(--card);
+  border-radius: var(--r);
+  box-shadow: var(--shadow);
+  border: none;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--blue);
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.add-door-btn:active { opacity: 0.7; }
+
+/* ── BOTTOM ACTIONS ── */
+.actions {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(242,242,247,0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 0.5px solid var(--border);
+  padding: 10px 16px;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom));
+  display: flex;
+  gap: 10px;
+}
+
+.action-btn {
+  flex: 1;
+  padding: 13px 8px;
+  border-radius: var(--r-sm);
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: opacity 0.15s;
+}
+
+.action-btn:active { opacity: 0.75; }
+
+.btn-cloud { background: var(--blue); color: #fff; }
+.btn-pdf   { background: var(--accent); color: #fff; }
+.btn-share { background: var(--bg2); color: var(--text); }
+
+/* ── MODAL ── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(6px);
+  z-index: 200;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.modal-overlay.show { display: flex; }
+
+.modal-sheet {
+  background: var(--card);
+  border-radius: 20px 20px 0 0;
+  width: 100%;
+  max-width: 600px;
+  padding: 16px 20px 40px;
+  animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.modal-handle {
+  width: 36px;
+  height: 4px;
+  background: var(--text3);
+  border-radius: 2px;
+  margin: 0 auto 16px;
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+
+.modal-msg {
+  font-size: 15px;
+  color: var(--text2);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.modal-btns { display: flex; gap: 10px; }
+
+.modal-btn {
+  flex: 1;
+  padding: 14px;
+  border-radius: var(--r-sm);
+  font-size: 15px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+}
+
+.modal-btn-primary { background: var(--blue); color: #fff; }
+.modal-btn-secondary { background: var(--bg); color: var(--text2); }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: rgba(28,28,30,0.88);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 100px;
   font-size: 14px;
   font-weight: 600;
-  cursor: pointer;
-  border: none;
-  font-family: -apple-system, sans-serif;
+  white-space: nowrap;
+  opacity: 0;
+  transition: all 0.3s;
+  z-index: 300;
+  pointer-events: none;
+}
 
-  transition: all 0.25s ease; /* ← магія тут */
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
- .btn-primary:hover,
-.btn-secondary:hover,
-.add-btn:hover {
-  background: #e60023; /* трохи темніший червоний */
-}
-.notes-area { min-height: 60px; resize: vertical; }
- 
+
+/* ── PRINT ── */
 .print-doc { display: none; }
- 
+
 @media print {
-  body { background: white; padding: 0; }
-  .header, .section, .actions, .add-btn { display: none !important; }
-  .print-doc h1 {
-  margin-top: 40px;
-}
-  .print-doc { display: block !important; padding: 15mm; font-size: 10pt; line-height: 1.3; }
-  .print-doc table { width: 100%; border-collapse: collapse; margin-top: 10pt; font-size: 9pt; }
-  .print-doc th, .print-doc td { border: 1px solid #000; padding: 3pt 5pt; text-align: center; }
-  .print-doc th { background: #f0f0f0; font-weight: 600; font-size: 8pt; }
-  .print-doc h1 { font-size: 14pt; margin-bottom: 8pt; text-align: center; }
-  .print-doc .info-row { display: flex; justify-content: space-between; margin-bottom: 4pt; font-size: 9pt; }
-  .print-doc .sig { margin-top: 15pt; font-size: 9pt; }
-  .print-doc .sig-line { margin-top: 6pt; border-bottom: 1px solid #000; width: 250pt; display: inline-block; }
-  .print-doc .logo-print { width: 220px; height: 40px; background: #f0f0f0; border: 1px dashed #999; display: flex; align-items: center; justify-content: center; font-size: 9pt; color: #999; margin-bottom: 8pt; }
+  body, .header, .section, .actions, .add-door-btn, .toast { display: none !important; }
+  .print-doc {
+    display: block !important;
+    padding: 14mm;
+    font-size: 10pt;
+    line-height: 1.4;
+    color: #000;
+    font-family: Arial, sans-serif;
+  }
+  .print-doc h1 { font-size: 15pt; text-align: center; margin-bottom: 10pt; }
+  .print-doc .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4pt 20pt; margin-bottom: 10pt; font-size: 9pt; }
+  .print-doc table { width: 100%; border-collapse: collapse; font-size: 8pt; }
+  .print-doc th, .print-doc td { border: 0.5pt solid #000; padding: 3pt 4pt; text-align: center; }
+  .print-doc th { background: #f0f0f0; font-weight: 700; }
+  .print-doc .sig-area { margin-top: 14pt; display: grid; grid-template-columns: 1fr 1fr; gap: 20pt; font-size: 9pt; }
+  .print-doc .sig-line { border-bottom: 0.5pt solid #000; margin-top: 20pt; }
+  .print-doc .notes-block { margin-top: 8pt; font-size: 9pt; }
+  .print-doc .photo-print { margin-top: 8pt; }
+  .print-doc .photo-print img { width: 80pt; height: 80pt; object-fit: cover; border-radius: 4pt; margin-right: 6pt; }
+  .print-doc .sig-img { height: 40pt; }
+  .print-doc .print-logo { height: 30pt; margin-bottom: 8pt; }
 }
 </style>
 </head>
-  <script type="module">
+<script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAc9MfX5Gufpc-VlSPt44K64idOAvAgbRY",
@@ -173,390 +551,645 @@ input[type=number] {
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
-
   window.db = db;
-  window.addDoc = addDoc;
   window.collection = collection;
+  window.addDoc = addDoc;
+  window.getDocs = getDocs;
+  window.query = query;
+  window.orderBy = orderBy;
 </script>
 <body>
- 
+
 <div class="header">
-<img src="logo.png" class="logo">
-  <div class="title">Бланк замірів</div>
+  <img src="logo.png" class="logo" onerror="this.style.display='none'; document.getElementById('logoText').style.display='block'">
+  <div class="logo-placeholder" id="logoText" style="display:none;">Е-Монтаж</div>
+  <div class="page-title">Бланк замірів дверей</div>
 </div>
- 
+
+<!-- ДАТА ТА МІСЦЕ -->
 <div class="section">
   <div class="sec-title">Дата та місце</div>
-  <div class="field">
-    <div class="field-label">Дата заміру</div>
-    <input type="date" id="date" onchange="save()">
-  </div>
-  <div class="field">
-    <div class="field-label">Назва магазину</div>
-    <input type="text" id="shop" placeholder="Назва" onchange="save()">
-  </div>
-  <div class="field">
-    <div class="field-label">Адреса магазину</div>
-    <input type="text" id="shop_addr" placeholder="м. Шептицьки, вул..." onchange="save()">
+  <div class="ios-card">
+    <div class="ios-row">
+      <div class="ios-row-label">Дата</div>
+      <input type="date" id="date" onchange="save()">
+    </div>
+    <div class="ios-row">
+      <div class="ios-row-label">Магазин</div>
+      <input type="text" id="shop" placeholder="Назва" onchange="save()">
+    </div>
+    <div class="ios-row">
+      <div class="ios-row-label">Адреса</div>
+      <input type="text" id="shop_addr" placeholder="м. Шептицьки, вул..." onchange="save()">
+    </div>
+    <div class="ios-row">
+      <div class="ios-row-label">Менеджер</div>
+      <input type="text" id="manager" placeholder="Ім'я" onchange="save()">
+    </div>
   </div>
 </div>
- 
+
+<!-- ЗАМОВНИК -->
 <div class="section">
   <div class="sec-title">Дані замовника</div>
-  <div class="field">
-    <div class="field-label">Ім'я та прізвище</div>
-    <input type="text" id="client_name" placeholder="Іван Петренко" onchange="save()">
-  </div>
-  <div class="field">
-    <div class="field-label">Адреса місця монтажу</div>
-    <input type="text" id="client_addr" placeholder="м., вул., №" onchange="save()">
-  </div>
-  <div class="field">
-    <div class="field-label">Телефон</div>
-    <input type="tel" id="client_tel" placeholder="+380" onchange="save()">
-  </div>
-  <div class="field">
-    <div class="field-label">Обраний товар ТМ</div>
-    <input type="text" id="brand" placeholder="Rodos, Terminus..." onchange="save()">
+  <div class="ios-card">
+    <div class="ios-row">
+      <div class="ios-row-label">Ім'я</div>
+      <input type="text" id="client_name" placeholder="Іван Петренко" onchange="save()">
+    </div>
+    <div class="ios-row">
+      <div class="ios-row-label">Адреса</div>
+      <input type="text" id="client_addr" placeholder="м., вул., №" onchange="save()">
+    </div>
+    <div class="ios-row">
+      <div class="ios-row-label">Телефон</div>
+      <input type="tel" id="client_tel" placeholder="+380" onchange="save()">
+    </div>
+    <div class="ios-row">
+      <div class="ios-row-label">Товар ТМ</div>
+      <input type="text" id="brand" placeholder="Rodos, Terminus..." onchange="save()">
+    </div>
   </div>
 </div>
- 
+
+<!-- ДВЕРІ -->
 <div class="section">
-  <div class="sec-title">Двері (замірені проєми)</div>
+  <div class="sec-title">Виміряні проєми</div>
   <div id="doors"></div>
-  <button class="add-btn" onclick="addDoor()">+ Додати двері</button>
+  <button class="add-door-btn" onclick="addDoor()">
+    <span style="font-size:20px; color:var(--blue);">＋</span>
+    Додати двері
+  </button>
 </div>
- 
+
+<!-- НОТАТКИ -->
 <div class="section">
-  <div class="sec-title">Поля для нотаток</div>
-  <textarea class="notes-area" id="notes" placeholder="Особливості, рекомендації..." onchange="save()"></textarea>
+  <div class="sec-title">Нотатки</div>
+  <div class="ios-card">
+    <textarea id="notes" rows="3" placeholder="Особливості, рекомендації, матеріал стін..." onchange="save()"></textarea>
+  </div>
 </div>
- 
+
+<!-- ПІДПИС ЗАМОВНИКА -->
+<div class="section">
+  <div class="sec-title">Підпис замовника</div>
+  <div class="ios-card">
+    <div class="sig-zone">
+      <div class="sig-canvas-wrap">
+        <canvas class="sig-pad" id="sigCanvas" width="700" height="160"></canvas>
+        <div class="sig-hint" id="sigHint">Підпишіться тут</div>
+      </div>
+      <div class="sig-clear" onclick="clearSig()">Очистити</div>
+    </div>
+  </div>
+</div>
+
+<!-- ACTION BUTTONS -->
 <div class="actions">
-  <button class="btn btn-secondary" onclick="shareTxt()">Share</button>
-<button class="btn btn-primary" onclick="saveToCloud()">☁️ ЗБЕРЕГТИ</button>
-  <button class="btn btn-primary" onclick="printDoc()">ДРУК</button>
+  <button class="action-btn btn-cloud" onclick="saveToCloud()">
+    ☁️ CRM
+  </button>
+  <button class="action-btn btn-pdf" onclick="savePDF()">
+    📄 PDF
+  </button>
+  <button class="action-btn btn-share" onclick="shareTxt()">
+    ↗ Share
+  </button>
 </div>
- 
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modalTitle"></div>
+    <div class="modal-msg" id="modalMsg"></div>
+    <div class="modal-btns" id="modalBtns"></div>
+  </div>
+</div>
+
+<!-- PRINT DOC -->
 <div class="print-doc" id="printable">
-<img src="logo.png" class="logo-print">
+  <img src="logo.png" class="print-logo" onerror="this.style.display='none'">
   <h1>Бланк заміру дверних блоків</h1>
-  <div class="info-row"><span><strong>Дата:</strong> <span id="p_date"></span></span></div>
-  <div class="info-row"><span><strong>Магазин:</strong> <span id="p_shop"></span>, <span id="p_shop_addr"></span></span></div>
-  <div class="info-row"><span><strong>Замовник:</strong> <span id="p_client"></span></span></div>
-  <div class="info-row"><span><strong>Адреса монтажу:</strong> <span id="p_addr"></span></span></div>
-  <div class="info-row"><span><strong>Телефон:</strong> <span id="p_tel"></span></span> <span><strong>Товар ТМ:</strong> <span id="p_brand"></span></span></div>
- 
+  <div class="info-grid">
+    <div><strong>Дата:</strong> <span id="p_date"></span></div>
+    <div><strong>Менеджер:</strong> <span id="p_manager"></span></div>
+    <div><strong>Магазин:</strong> <span id="p_shop"></span></div>
+    <div><strong>Адреса магазину:</strong> <span id="p_shop_addr"></span></div>
+    <div><strong>Замовник:</strong> <span id="p_client"></span></div>
+    <div><strong>Телефон:</strong> <span id="p_tel"></span></div>
+    <div><strong>Адреса монтажу:</strong> <span id="p_addr"></span></div>
+    <div><strong>Товар ТМ:</strong> <span id="p_brand"></span></div>
+  </div>
+
   <table>
     <thead>
       <tr>
-        <th style="width:18px;">№</th>
+        <th>№</th>
         <th>Кімната</th>
-        <th style="width:45px;">Висота</th>
-        <th style="width:45px;">Ширина</th>
-        <th style="width:35px;">Стіна</th>
-        <th style="width:80px;">Підготувати проєм</th>
-        <th style="width:60px;">Розмір блоку В×Ш</th>
-        <th style="width:35px;">Лиш.</th>
-        <th style="width:35px;">Відкр.</th>
-        <th style="width:35px;">Напр.</th>
-        <th style="width:35px;">Замок</th>
-        <th style="width:20px;">П</th>
-        <th style="width:20px;">Р</th>
-        <th style="width:20px;">Д</th>
-        <th style="width:45px;">Ціна</th>
+        <th>Вис. мм</th>
+        <th>Шир. мм</th>
+        <th>Стіна</th>
+        <th>Підгот. проєм</th>
+        <th>Блок В×Ш</th>
+        <th>Лишт.</th>
+        <th>Відкр.</th>
+        <th>Напр.</th>
+        <th>Замок</th>
+        <th>Підлога</th>
+        <th>Ремонт</th>
+        <th>Демонт.</th>
+        <th>Ціна</th>
       </tr>
     </thead>
     <tbody id="p_doors"></tbody>
   </table>
- 
-  <div style="margin-top:10pt;"><strong>Нотатки:</strong></div>
-  <div id="p_notes" style="white-space:pre-wrap;"></div>
- 
-  <div class="sig">
-    <div><strong>Менеджер:</strong> <span class="sig-line"></span></div>
-    <div style="margin-top:10pt;"><strong>Замовник:</strong> <span class="sig-line"></span></div>
+
+  <div class="photo-print" id="p_photos"></div>
+
+  <div class="notes-block">
+    <strong>Нотатки:</strong>
+    <div id="p_notes"></div>
+  </div>
+
+  <div class="sig-area">
+    <div>
+      <div><strong>Менеджер:</strong></div>
+      <div class="sig-line"></div>
+    </div>
+    <div>
+      <div><strong>Підпис замовника:</strong></div>
+      <img id="p_sig" class="sig-img" style="display:none;">
+      <div class="sig-line" id="p_sig_line"></div>
+    </div>
   </div>
 </div>
- 
+
 <script>
-  function saveManual() {
-  save(); // твоя існуюча функція
-
-  // візуальний ефект (це робить “вау”)
-  var btn = document.querySelector('.btn-primary');
-  var original = btn.innerHTML;
-
-  btn.innerHTML = '⏳ ЗБЕРІГАЄМО...';
-  btn.style.opacity = '0.7';
-
-  setTimeout(function() {
-    btn.innerHTML = '✅ ЗБЕРЕЖЕНО';
-    btn.style.opacity = '1';
-
-    setTimeout(function() {
-      btn.innerHTML = original;
-    }, 1500);
-
-  }, 800);
-}
 var doors = [];
 var doorCounter = 0;
- 
+var sigDrawing = false;
+var sigHasContent = false;
+
+/* ───── LOAD / SAVE ───── */
 function load() {
-  var saved = localStorage.getItem('door_measurements_v2');
+  var saved = localStorage.getItem('zamir_v3');
   if (saved) {
-    var data = JSON.parse(saved);
-    document.getElementById('date').value = data.date || '';
-    document.getElementById('shop').value = data.shop || '';
-    document.getElementById('shop_addr').value = data.shop_addr || '';
-    document.getElementById('client_name').value = data.client_name || '';
-    document.getElementById('client_addr').value = data.client_addr || '';
-    document.getElementById('client_tel').value = data.client_tel || '';
-    document.getElementById('brand').value = data.brand || '';
-    document.getElementById('notes').value = data.notes || '';
-    doors = data.doors || [];
-    doorCounter = data.doorCounter || 0;
+    var d = JSON.parse(saved);
+    setVal('date', d.date);
+    setVal('shop', d.shop);
+    setVal('shop_addr', d.shop_addr);
+    setVal('manager', d.manager);
+    setVal('client_name', d.client_name);
+    setVal('client_addr', d.client_addr);
+    setVal('client_tel', d.client_tel);
+    setVal('brand', d.brand);
+    setVal('notes', d.notes);
+    doors = d.doors || [];
+    doorCounter = d.doorCounter || 0;
+    if (d.sig) { restoreSig(d.sig); }
+  } else {
+    var today = new Date();
+    setVal('date', today.toISOString().slice(0,10));
   }
   renderDoors();
 }
- async function saveToCloud() {
-  var data = {
-    date: document.getElementById('date').value,
-    client: document.getElementById('client_name').value,
-    phone: document.getElementById('client_tel').value,
-    doors: doors,
-    created: new Date()
-  };
 
-  try {
-    await addDoc(collection(db, "measurements"), data);
-    alert("✅ Збережено в CRM");
-  } catch (e) {
-    alert("❌ Помилка: " + e);
-    console.error(e);
-  }
-}
 function save() {
-  var data = {
-    date: document.getElementById('date').value,
-    shop: document.getElementById('shop').value,
-    shop_addr: document.getElementById('shop_addr').value,
-    client_name: document.getElementById('client_name').value,
-    client_addr: document.getElementById('client_addr').value,
-    client_tel: document.getElementById('client_tel').value,
-    brand: document.getElementById('brand').value,
-    notes: document.getElementById('notes').value,
-    doors: doors,
-    doorCounter: doorCounter
+  var sig = sigHasContent ? document.getElementById('sigCanvas').toDataURL('image/png', 0.5) : '';
+  localStorage.setItem('zamir_v3', JSON.stringify({
+    date: gv('date'), shop: gv('shop'), shop_addr: gv('shop_addr'),
+    manager: gv('manager'), client_name: gv('client_name'),
+    client_addr: gv('client_addr'), client_tel: gv('client_tel'),
+    brand: gv('brand'), notes: gv('notes'),
+    doors: doors, doorCounter: doorCounter, sig: sig
+  }));
+}
+
+function gv(id) { var e = document.getElementById(id); return e ? e.value : ''; }
+function setVal(id, val) { var e = document.getElementById(id); if (e && val) e.value = val; }
+
+/* ───── SIGNATURE PAD ───── */
+function initSig() {
+  var canvas = document.getElementById('sigCanvas');
+  var ctx = canvas.getContext('2d');
+  var rect;
+
+  function getPos(e) {
+    rect = canvas.getBoundingClientRect();
+    var scaleX = canvas.width / rect.width;
+    var scaleY = canvas.height / rect.height;
+    var src = e.touches ? e.touches[0] : e;
+    return {
+      x: (src.clientX - rect.left) * scaleX,
+      y: (src.clientY - rect.top) * scaleY
+    };
+  }
+
+  function start(e) {
+    e.preventDefault();
+    sigDrawing = true;
+    var p = getPos(e);
+    ctx.beginPath();
+    ctx.moveTo(p.x, p.y);
+    document.getElementById('sigHint').classList.add('hidden');
+    sigHasContent = true;
+  }
+
+  function move(e) {
+    if (!sigDrawing) return;
+    e.preventDefault();
+    var p = getPos(e);
+    ctx.lineWidth = 2.5;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = '#1c1c1e';
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(p.x, p.y);
+  }
+
+  function end(e) {
+    sigDrawing = false;
+    save();
+  }
+
+  canvas.addEventListener('touchstart', start, { passive: false });
+  canvas.addEventListener('touchmove', move, { passive: false });
+  canvas.addEventListener('touchend', end);
+  canvas.addEventListener('mousedown', start);
+  canvas.addEventListener('mousemove', move);
+  canvas.addEventListener('mouseup', end);
+}
+
+function clearSig() {
+  var canvas = document.getElementById('sigCanvas');
+  var ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  sigHasContent = false;
+  document.getElementById('sigHint').classList.remove('hidden');
+  save();
+}
+
+function restoreSig(dataUrl) {
+  if (!dataUrl) return;
+  var img = new Image();
+  img.onload = function() {
+    var canvas = document.getElementById('sigCanvas');
+    var ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    sigHasContent = true;
+    document.getElementById('sigHint').classList.add('hidden');
   };
-  localStorage.setItem('door_measurements_v2', JSON.stringify(data));
+  img.src = dataUrl;
 }
- 
-function gv(id) {
-  var el = document.getElementById(id);
-  return el ? el.value : '';
-}
- 
+
+/* ───── DOORS ───── */
 function addDoor() {
   doorCounter++;
   doors.push({
-    id: doorCounter,
-    room: '',
-    height: '',
-    width: '',
-    wall: '',
-    prep: '',
-    block_h: '',
-    block_w: '',
-    lishta: '1',
-    open: 'R',
-    dir: 'внутр',
-    lock: '',
-    floor: false,
-    repair: false,
-    demolish: false,
-    price: ''
+    id: doorCounter, room: '',
+    height: '', width: '', wall: '',
+    prep: '', block_h: '', block_w: '',
+    lishta: '1', open: 'R', dir: 'внутр',
+    lock: '', floor: false, repair: false, demolish: false,
+    price: '', photos: []
   });
   renderDoors();
   save();
+  setTimeout(function() {
+    var cards = document.querySelectorAll('.door-card');
+    if (cards.length) cards[cards.length-1].scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 100);
 }
- 
+
 function delDoor(id) {
   doors = doors.filter(function(d) { return d.id !== id; });
   renderDoors();
   save();
 }
- 
+
 function updateDoor(id, field, val) {
-  for (var i = 0; i < doors.length; i++) {
-    if (doors[i].id === id) {
-      doors[i][field] = val;
-      break;
-    }
-  }
-  save();
+  var d = doors.find(function(d) { return d.id === id; });
+  if (d) { d[field] = val; save(); }
 }
- 
+
 function setRadio(id, field, val) {
   updateDoor(id, field, val);
   renderDoors();
 }
- 
+
 function toggleCheck(id, field) {
-  for (var i = 0; i < doors.length; i++) {
-    if (doors[i].id === id) {
-      doors[i][field] = !doors[i][field];
-      break;
-    }
-  }
-  renderDoors();
-  save();
+  var d = doors.find(function(d) { return d.id === id; });
+  if (d) { d[field] = !d[field]; renderDoors(); save(); }
 }
- 
+
+function addPhoto(id) {
+  var inp = document.getElementById('photo_input_' + id);
+  if (inp) inp.click();
+}
+
+function handlePhoto(id, input) {
+  var files = input.files;
+  if (!files.length) return;
+  var d = doors.find(function(d) { return d.id === id; });
+  if (!d) return;
+  if (!d.photos) d.photos = [];
+
+  var readers = Array.from(files).map(function(file) {
+    return new Promise(function(resolve) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        // compress
+        var img = new Image();
+        img.onload = function() {
+          var canvas = document.createElement('canvas');
+          var max = 800;
+          var scale = Math.min(max/img.width, max/img.height, 1);
+          canvas.width = img.width * scale;
+          canvas.height = img.height * scale;
+          canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+          resolve(canvas.toDataURL('image/jpeg', 0.6));
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  });
+
+  Promise.all(readers).then(function(urls) {
+    d.photos = (d.photos || []).concat(urls);
+    renderDoors();
+    save();
+    showToast('📷 Фото додано');
+  });
+}
+
+function removePhoto(doorId, photoIdx) {
+  var d = doors.find(function(d) { return d.id === doorId; });
+  if (d && d.photos) {
+    d.photos.splice(photoIdx, 1);
+    renderDoors();
+    save();
+  }
+}
+
 function renderDoors() {
   var html = '';
   for (var i = 0; i < doors.length; i++) {
     var d = doors[i];
+    var id = d.id;
+
     html += '<div class="door-card">';
-    html += '<div class="door-header">';
-    html += '<div class="door-num">Двері №' + (i+1) + '</div>';
-    html += '<div class="door-del" onclick="delDoor(' + d.id + ')">×</div>';
+
+    // header
+    html += '<div class="door-card-header">';
+    html += '<div class="door-card-title">🚪 Двері №' + (i+1) + (d.room ? ' — ' + d.room : '') + '</div>';
+    html += '<div class="door-del-btn" onclick="delDoor(' + id + ')">×</div>';
     html += '</div>';
-    
-    html += '<div class="mini-field">';
-    html += '<div class="mini-label">Кімната (назва приміщення)</div>';
-    html += '<input type="text" value="' + (d.room || '') + '" placeholder="Вітальня, Спальня..." onchange="updateDoor(' + d.id + ',\'room\',this.value)">';
+    html += '<div class="door-body">';
+
+    // room
+    html += row('Кімната', '<input type="text" value="' + esc(d.room) + '" placeholder="Вітальня, Спальня..." onchange="updateDoor(' + id + ',\'room\',this.value)">');
+
+    // dims
+    html += row('Висота мм', '<input type="number" value="' + (d.height||'') + '" placeholder="2050" onchange="updateDoor(' + id + ',\'height\',this.value)" inputmode="numeric">');
+    html += row('Ширина мм', '<input type="number" value="' + (d.width||'') + '" placeholder="800" onchange="updateDoor(' + id + ',\'width\',this.value)" inputmode="numeric">');
+    html += row('Товщ. стіни', '<input type="number" value="' + (d.wall||'') + '" placeholder="70" onchange="updateDoor(' + id + ',\'wall\',this.value)" inputmode="numeric">');
+
+    // prep
+    html += row('Підгот. проєм', '<input type="text" value="' + esc(d.prep) + '" placeholder="Опис..." onchange="updateDoor(' + id + ',\'prep\',this.value)">');
+
+    // block
+    html += row('Блок висота', '<input type="number" value="' + (d.block_h||'') + '" placeholder="2000" onchange="updateDoor(' + id + ',\'block_h\',this.value)" inputmode="numeric">');
+    html += row('Блок ширина', '<input type="number" value="' + (d.block_w||'') + '" placeholder="700" onchange="updateDoor(' + id + ',\'block_w\',this.value)" inputmode="numeric">');
+
+    // lishta
+    html += rowSeg('Лиштва', id, 'lishta', [['1','1 к-кт'],['2','2 к-кт']], d.lishta);
+
+    // open dir
+    html += rowSeg('Відкриття', id, 'open', [['R','Праве'],['L','Ліве']], d.open);
+    html += rowSeg('Напрямок', id, 'dir', [['внутр','Всередину'],['зовн','Назовні']], d.dir);
+
+    // lock
+    html += row('Замок', '<input type="text" value="' + esc(d.lock) + '" placeholder="WC, засувка..." onchange="updateDoor(' + id + ',\'lock\',this.value)">');
+
+    // toggles
+    html += '<div class="check-row">';
+    html += '<div class="check-row-label">Підлога</div>';
+    html += '<div class="ios-toggle ' + (d.floor?'on':'') + '" onclick="toggleCheck(' + id + ',\'floor\')"></div>';
     html += '</div>';
- 
-    html += '<div class="row-3">';
-    html += '<div class="mini-field"><div class="mini-label">Висота (мм)</div><input type="number" value="' + (d.height || '') + '" placeholder="2050" onchange="updateDoor(' + d.id + ',\'height\',this.value)"></div>';
-    html += '<div class="mini-field"><div class="mini-label">Ширина (мм)</div><input type="number" value="' + (d.width || '') + '" placeholder="800" onchange="updateDoor(' + d.id + ',\'width\',this.value)"></div>';
-    html += '<div class="mini-field"><div class="mini-label">Товщ. стіни</div><input type="number" value="' + (d.wall || '') + '" placeholder="70" onchange="updateDoor(' + d.id + ',\'wall\',this.value)"></div>';
+    html += '<div class="check-row">';
+    html += '<div class="check-row-label">Ремонт</div>';
+    html += '<div class="ios-toggle ' + (d.repair?'on':'') + '" onclick="toggleCheck(' + id + ',\'repair\')"></div>';
     html += '</div>';
- 
-    html += '<div class="mini-field">';
-    html += '<div class="mini-label">Необхідно підготувати проєм</div>';
-    html += '<input type="text" value="' + (d.prep || '') + '" placeholder="Опис робіт..." onchange="updateDoor(' + d.id + ',\'prep\',this.value)">';
+    html += '<div class="check-row">';
+    html += '<div class="check-row-label">Демонтаж</div>';
+    html += '<div class="ios-toggle ' + (d.demolish?'on':'') + '" onclick="toggleCheck(' + id + ',\'demolish\')"></div>';
     html += '</div>';
- 
-    html += '<div class="row-2">';
-    html += '<div class="mini-field"><div class="mini-label">Розмір блоку Висота</div><input type="number" value="' + (d.block_h || '') + '" placeholder="2000" onchange="updateDoor(' + d.id + ',\'block_h\',this.value)"></div>';
-    html += '<div class="mini-field"><div class="mini-label">Розмір блоку Ширина</div><input type="number" value="' + (d.block_w || '') + '" placeholder="700" onchange="updateDoor(' + d.id + ',\'block_w\',this.value)"></div>';
-    html += '</div>';
- 
-    html += '<div class="row-2">';
-    html += '<div class="mini-field"><div class="mini-label">Лиштва</div><div class="radio-group">';
-    html += '<div class="radio-btn ' + (d.lishta === '1' ? 'on' : '') + '" onclick="setRadio(' + d.id + ',\'lishta\',\'1\')">1 к-кт</div>';
-    html += '<div class="radio-btn ' + (d.lishta === '2' ? 'on' : '') + '" onclick="setRadio(' + d.id + ',\'lishta\',\'2\')">2 к-кт</div>';
+
+    // price
+    html += row('Ціна монтажу', '<input type="number" value="' + (d.price||'') + '" placeholder="1 600 грн" onchange="updateDoor(' + id + ',\'price\',this.value)" inputmode="numeric"><span style="color:var(--text3);font-size:14px;padding-left:4px;">грн</span>');
+
+    // PHOTOS
+    html += '<div class="photo-zone">';
+    html += '<div class="photo-label">Фото проєму</div>';
+    html += '<div class="photo-grid">';
+    if (d.photos) {
+      for (var p = 0; p < d.photos.length; p++) {
+        html += '<div style="position:relative;">';
+        html += '<img class="photo-thumb" src="' + d.photos[p] + '">';
+        html += '<div style="position:absolute;top:-4px;right:-4px;width:20px;height:20px;background:var(--danger,#ff3b30);border-radius:50%;color:#fff;font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-weight:300;" onclick="removePhoto(' + id + ',' + p + ')">×</div>';
+        html += '</div>';
+      }
+    }
+    html += '<input type="file" id="photo_input_' + id + '" accept="image/*" capture="environment" multiple onchange="handlePhoto(' + id + ',this)">';
+    html += '<button class="photo-add-btn" onclick="addPhoto(' + id + ')">';
+    html += '<div class="photo-add-icon">📷</div>';
+    html += '<div class="photo-add-text">Фото</div>';
+    html += '</button>';
     html += '</div></div>';
- 
-    html += '<div class="mini-field"><div class="mini-label">Відкриття</div><div class="radio-group">';
-    html += '<div class="radio-btn ' + (d.open === 'R' ? 'on' : '') + '" onclick="setRadio(' + d.id + ',\'open\',\'R\')">Прав</div>';
-    html += '<div class="radio-btn ' + (d.open === 'L' ? 'on' : '') + '" onclick="setRadio(' + d.id + ',\'open\',\'L\')">Лів</div>';
-    html += '</div></div>';
-    html += '</div>';
- 
-    html += '<div class="mini-field"><div class="mini-label">Напрямок відкривання</div><div class="radio-group">';
-    html += '<div class="radio-btn ' + (d.dir === 'внутр' ? 'on' : '') + '" onclick="setRadio(' + d.id + ',\'dir\',\'внутр\')">Внутрішня</div>';
-    html += '<div class="radio-btn ' + (d.dir === 'зовн' ? 'on' : '') + '" onclick="setRadio(' + d.id + ',\'dir\',\'зовн\')">Зовнішня</div>';
-    html += '</div></div>';
- 
-    html += '<div class="mini-field"><div class="mini-label">Тип замка</div><input type="text" value="' + (d.lock || '') + '" placeholder="WC, засувка..." onchange="updateDoor(' + d.id + ',\'lock\',this.value)"></div>';
- 
-    html += '<div class="mini-field"><div class="mini-label">Стан приміщення</div><div class="check-group">';
-    html += '<div class="check-box ' + (d.floor ? 'on' : '') + '" onclick="toggleCheck(' + d.id + ',\'floor\')">';
-    html += '<div class="check-icon">' + (d.floor ? '✓' : '') + '</div> Підлога</div>';
-    html += '<div class="check-box ' + (d.repair ? 'on' : '') + '" onclick="toggleCheck(' + d.id + ',\'repair\')">';
-    html += '<div class="check-icon">' + (d.repair ? '✓' : '') + '</div> Ремонт</div>';
-    html += '<div class="check-box ' + (d.demolish ? 'on' : '') + '" onclick="toggleCheck(' + d.id + ',\'demolish\')">';
-    html += '<div class="check-icon">' + (d.demolish ? '✓' : '') + '</div> Демонтаж</div>';
-    html += '</div></div>';
- 
-    html += '<div class="mini-field"><div class="mini-label">Ціна монтажу (грн)</div><input type="number" value="' + (d.price || '') + '" placeholder="1600" onchange="updateDoor(' + d.id + ',\'price\',this.value)"></div>';
- 
-    html += '</div>';
+
+    html += '</div></div>'; // door-body + door-card
   }
+
   document.getElementById('doors').innerHTML = html;
 }
- 
+
+function row(label, content) {
+  return '<div class="ios-row"><div class="ios-row-label">' + label + '</div>' + content + '</div>';
+}
+
+function rowSeg(label, id, field, opts, current) {
+  var segs = opts.map(function(o) {
+    return '<div class="seg-btn ' + (current === o[0] ? 'on' : '') + '" onclick="setRadio(' + id + ',\'' + field + '\',\'' + o[0] + '\')">' + o[1] + '</div>';
+  }).join('');
+  return '<div class="ios-row"><div class="ios-row-label">' + label + '</div><div class="seg-ctrl">' + segs + '</div></div>';
+}
+
+function esc(s) { return (s||'').replace(/"/g,'&quot;'); }
+
+/* ───── PRINT / PDF ───── */
 function preparePrint() {
   document.getElementById('p_date').textContent = gv('date');
+  document.getElementById('p_manager').textContent = gv('manager');
   document.getElementById('p_shop').textContent = gv('shop');
   document.getElementById('p_shop_addr').textContent = gv('shop_addr');
   document.getElementById('p_client').textContent = gv('client_name');
-  document.getElementById('p_addr').textContent = gv('client_addr');
   document.getElementById('p_tel').textContent = gv('client_tel');
+  document.getElementById('p_addr').textContent = gv('client_addr');
   document.getElementById('p_brand').textContent = gv('brand');
   document.getElementById('p_notes').textContent = gv('notes');
- 
+
+  // signature
+  if (sigHasContent) {
+    var sigImg = document.getElementById('p_sig');
+    sigImg.src = document.getElementById('sigCanvas').toDataURL('image/png');
+    sigImg.style.display = 'block';
+    document.getElementById('p_sig_line').style.display = 'none';
+  }
+
+  // table
   var tbody = '';
+  var allPhotos = [];
   for (var i = 0; i < doors.length; i++) {
     var d = doors[i];
     tbody += '<tr>';
     tbody += '<td>' + (i+1) + '</td>';
-    tbody += '<td>' + (d.room || '') + '</td>';
-    tbody += '<td>' + (d.height || '') + '</td>';
-    tbody += '<td>' + (d.width || '') + '</td>';
-    tbody += '<td>' + (d.wall || '') + '</td>';
-    tbody += '<td style="font-size:8pt;">' + (d.prep || '') + '</td>';
-    tbody += '<td>' + (d.block_h || '') + '×' + (d.block_w || '') + '</td>';
-    tbody += '<td>' + (d.lishta || '') + '</td>';
-    tbody += '<td>' + (d.open || '') + '</td>';
-    tbody += '<td>' + (d.dir || '') + '</td>';
-    tbody += '<td>' + (d.lock || '') + '</td>';
-    tbody += '<td>' + (d.floor ? '✓' : '') + '</td>';
-    tbody += '<td>' + (d.repair ? '✓' : '') + '</td>';
-    tbody += '<td>' + (d.demolish ? '✓' : '') + '</td>';
-    tbody += '<td>' + (d.price || '') + '</td>';
+    tbody += '<td>' + (d.room||'') + '</td>';
+    tbody += '<td>' + (d.height||'') + '</td>';
+    tbody += '<td>' + (d.width||'') + '</td>';
+    tbody += '<td>' + (d.wall||'') + '</td>';
+    tbody += '<td style="font-size:7pt;">' + (d.prep||'') + '</td>';
+    tbody += '<td>' + (d.block_h||'') + '×' + (d.block_w||'') + '</td>';
+    tbody += '<td>' + (d.lishta||'') + '</td>';
+    tbody += '<td>' + (d.open||'') + '</td>';
+    tbody += '<td>' + (d.dir||'') + '</td>';
+    tbody += '<td>' + (d.lock||'') + '</td>';
+    tbody += '<td>' + (d.floor?'✓':'') + '</td>';
+    tbody += '<td>' + (d.repair?'✓':'') + '</td>';
+    tbody += '<td>' + (d.demolish?'✓':'') + '</td>';
+    tbody += '<td>' + (d.price||'') + '</td>';
     tbody += '</tr>';
+    if (d.photos && d.photos.length) {
+      allPhotos = allPhotos.concat(d.photos.map(function(p,pi) {
+        return { src: p, label: 'Двері №' + (i+1) + ', фото ' + (pi+1) };
+      }));
+    }
   }
   document.getElementById('p_doors').innerHTML = tbody;
+
+  // photos
+  var photosHtml = '';
+  if (allPhotos.length) {
+    photosHtml = '<div style="margin-top:8pt;font-size:9pt;"><strong>Фото проємів:</strong></div><div>';
+    allPhotos.forEach(function(p) {
+      photosHtml += '<img src="' + p.src + '" style="width:70pt;height:70pt;object-fit:cover;border-radius:4pt;margin:4pt;" title="' + p.label + '">';
+    });
+    photosHtml += '</div>';
+  }
+  document.getElementById('p_photos').innerHTML = photosHtml;
 }
- 
+
+function savePDF() {
+  preparePrint();
+  var name = gv('client_name').replace(/\s/g,'_') || 'бланк';
+  html2pdf().set({
+    margin: 10,
+    filename: 'Замір_' + name + '.pdf',
+    image: { type: 'jpeg', quality: 0.95 },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+  }).from(document.getElementById('printable')).save();
+  showToast('📄 PDF збережено');
+}
+
 function printDoc() {
   preparePrint();
   window.print();
 }
- 
-function savePDF() {
-  preparePrint();
-  var opt = {
-    margin: 10,
-    filename: 'Бланк_замірів_' + gv('client_name').replace(/\s/g,'_') + '.pdf',
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2 },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-  };
-  html2pdf().set(opt).from(document.getElementById('printable')).save();
-}
- 
+
+/* ───── SHARE ───── */
 function shareTxt() {
-  var text = 'Бланк замірів дверей\n\n';
-  text += 'Дата: ' + gv('date') + '\n';
-  text += 'Замовник: ' + gv('client_name') + '\n';
-  text += 'Телефон: ' + gv('client_tel') + '\n';
-  text += 'Адреса: ' + gv('client_addr') + '\n\n';
-  text += 'Двері:\n';
-  for (var i = 0; i < doors.length; i++) {
-    var d = doors[i];
-    text += (i+1) + '. ' + (d.room || 'Кімната') + ': ' + d.height + '×' + d.width + ' мм\n';
-    text += '   Блок: ' + d.block_h + '×' + d.block_w + ', ' + d.open + ', ' + d.dir + ', ' + d.lock + '\n';
-    text += '   Ціна: ' + d.price + ' грн\n';
-  }
-  if (gv('notes')) text += '\nНотатки: ' + gv('notes');
- 
+  var text = '📋 Бланк замірів\n\n';
+  text += '📅 Дата: ' + gv('date') + '\n';
+  text += '👤 Замовник: ' + gv('client_name') + '\n';
+  text += '📞 Тел: ' + gv('client_tel') + '\n';
+  text += '📍 ' + gv('client_addr') + '\n\n';
+  text += '🚪 Двері:\n';
+  doors.forEach(function(d, i) {
+    text += (i+1) + '. ' + (d.room||'—') + ': ' + d.height + '×' + d.width + ' мм';
+    text += ', блок ' + d.block_h + '×' + d.block_w;
+    text += ', ' + (d.open==='R'?'праве':'ліве') + ', ' + d.dir;
+    if (d.price) text += ', ' + d.price + ' грн';
+    text += '\n';
+  });
+  if (gv('notes')) text += '\n📝 ' + gv('notes');
+
   if (navigator.share) {
-    navigator.share({ title: 'Бланк замірів', text: text }).catch(function() {});
+    navigator.share({ title: 'Бланк замірів', text: text }).catch(function(){});
   } else {
-    alert('Функція поділитися не підтримується');
+    navigator.clipboard && navigator.clipboard.writeText(text).then(function() {
+      showToast('✅ Скопійовано');
+    });
   }
 }
- 
-load();
-if (doors.length === 0) {
-  addDoor();
+
+/* ───── CLOUD ───── */
+async function saveToCloud() {
+  if (!window.db) { showToast('⚠️ Firebase не підключено'); return; }
+
+  var btn = document.querySelector('.btn-cloud');
+  btn.textContent = '⏳';
+
+  var data = {
+    date: gv('date'),
+    shop: gv('shop'),
+    shop_addr: gv('shop_addr'),
+    manager: gv('manager'),
+    client_name: gv('client_name'),
+    client_addr: gv('client_addr'),
+    client_tel: gv('client_tel'),
+    brand: gv('brand'),
+    notes: gv('notes'),
+    doors: doors.map(function(d) {
+      return {
+        room: d.room, height: d.height, width: d.width,
+        wall: d.wall, prep: d.prep, block_h: d.block_h, block_w: d.block_w,
+        lishta: d.lishta, open: d.open, dir: d.dir, lock: d.lock,
+        floor: d.floor, repair: d.repair, demolish: d.demolish, price: d.price,
+        photosCount: (d.photos||[]).length
+      };
+    }),
+    created: new Date().toISOString()
+  };
+
+  try {
+    await window.addDoc(window.collection(window.db, 'measurements'), data);
+    btn.textContent = '☁️ CRM';
+    showToast('✅ Збережено в CRM!');
+  } catch(e) {
+    btn.textContent = '☁️ CRM';
+    showToast('❌ Помилка збереження');
+    console.error(e);
+  }
 }
+
+/* ───── TOAST ───── */
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 2500);
+}
+
+/* ───── INIT ───── */
+initSig();
+load();
+if (doors.length === 0) addDoor();
 </script>
 </body>
 </html>
