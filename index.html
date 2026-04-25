@@ -512,27 +512,142 @@ canvas.sig-pad {
 .print-doc { display: none; }
 
 @media print {
-  body, .header, .section, .actions, .add-door-btn, .toast { display: none !important; }
+  .header, .section, .actions, .add-door-btn, .toast, .modal-overlay { display: none !important; }
+
   .print-doc {
     display: block !important;
-    padding: 14mm;
+    padding: 12mm 14mm;
     font-size: 10pt;
-    line-height: 1.4;
+    line-height: 1.5;
     color: #000;
     font-family: Arial, sans-serif;
   }
-  .print-doc h1 { font-size: 15pt; text-align: center; margin-bottom: 10pt; }
-  .print-doc .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4pt 20pt; margin-bottom: 10pt; font-size: 9pt; }
-  .print-doc table { width: 100%; border-collapse: collapse; font-size: 8pt; }
-  .print-doc th, .print-doc td { border: 0.5pt solid #000; padding: 3pt 4pt; text-align: center; }
-  .print-doc th { background: #f0f0f0; font-weight: 700; }
-  .print-doc .sig-area { margin-top: 14pt; display: grid; grid-template-columns: 1fr 1fr; gap: 20pt; font-size: 9pt; }
-  .print-doc .sig-line { border-bottom: 0.5pt solid #000; margin-top: 20pt; }
-  .print-doc .notes-block { margin-top: 8pt; font-size: 9pt; }
-  .print-doc .photo-print { margin-top: 8pt; }
-  .print-doc .photo-print img { width: 80pt; height: 80pt; object-fit: cover; border-radius: 4pt; margin-right: 6pt; }
-  .print-doc .sig-img { height: 40pt; }
-  .print-doc .print-logo { height: 30pt; margin-bottom: 8pt; }
+
+  .print-doc .print-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1.5pt solid #000;
+    padding-bottom: 8pt;
+    margin-bottom: 10pt;
+  }
+
+  .print-doc .print-logo {
+    height: 36pt;
+    object-fit: contain;
+  }
+
+  .print-doc .print-title-block {
+    text-align: center;
+  }
+
+  .print-doc h1 {
+    font-size: 16pt;
+    font-weight: 700;
+    margin: 0 0 2pt;
+  }
+
+  .print-doc .print-subtitle {
+    font-size: 9pt;
+    color: #555;
+  }
+
+  .print-doc .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3pt 24pt;
+    margin-bottom: 10pt;
+    font-size: 9pt;
+    background: #f8f8f8;
+    padding: 8pt 10pt;
+    border-radius: 4pt;
+    border: 0.5pt solid #ddd;
+  }
+
+  .print-doc .info-item strong {
+    color: #555;
+    font-weight: 600;
+  }
+
+  .print-doc table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8pt;
+    margin-bottom: 8pt;
+  }
+
+  .print-doc th {
+    background: #1c1c1e;
+    color: #fff;
+    font-weight: 700;
+    padding: 4pt 4pt;
+    text-align: center;
+    font-size: 7.5pt;
+  }
+
+  .print-doc td {
+    border: 0.5pt solid #ccc;
+    padding: 4pt 4pt;
+    text-align: center;
+    font-size: 8pt;
+  }
+
+  .print-doc tr:nth-child(even) td { background: #f9f9f9; }
+
+  .print-doc .notes-block {
+    margin-top: 8pt;
+    font-size: 9pt;
+    padding: 6pt 8pt;
+    border: 0.5pt solid #ddd;
+    border-radius: 4pt;
+    background: #fafafa;
+  }
+
+  .print-doc .photo-section {
+    margin-top: 8pt;
+    font-size: 9pt;
+  }
+
+  .print-doc .photo-section strong {
+    display: block;
+    margin-bottom: 4pt;
+  }
+
+  .print-doc .photo-section img {
+    width: 72pt;
+    height: 72pt;
+    object-fit: cover;
+    border-radius: 4pt;
+    margin: 0 4pt 4pt 0;
+    border: 0.5pt solid #ddd;
+  }
+
+  .print-doc .sig-area {
+    margin-top: 14pt;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20pt;
+    font-size: 9pt;
+    border-top: 0.5pt solid #000;
+    padding-top: 10pt;
+  }
+
+  .print-doc .sig-block strong {
+    display: block;
+    margin-bottom: 4pt;
+    font-size: 9pt;
+  }
+
+  .print-doc .sig-line {
+    border-bottom: 0.5pt solid #000;
+    margin-top: 24pt;
+  }
+
+  .print-doc .sig-img {
+    height: 44pt;
+    display: block;
+    margin-top: 4pt;
+  }
 }
 </style>
 </head>
@@ -672,19 +787,31 @@ canvas.sig-pad {
 
 <!-- PRINT DOC -->
 <div class="print-doc" id="printable">
-  <img src="logo.png" class="print-logo" onerror="this.style.display='none'">
-  <h1>Бланк заміру дверних блоків</h1>
-  <div class="info-grid">
-    <div><strong>Дата:</strong> <span id="p_date"></span></div>
-    <div><strong>Менеджер:</strong> <span id="p_manager"></span></div>
-    <div><strong>Магазин:</strong> <span id="p_shop"></span></div>
-    <div><strong>Адреса магазину:</strong> <span id="p_shop_addr"></span></div>
-    <div><strong>Замовник:</strong> <span id="p_client"></span></div>
-    <div><strong>Телефон:</strong> <span id="p_tel"></span></div>
-    <div><strong>Адреса монтажу:</strong> <span id="p_addr"></span></div>
-    <div><strong>Товар ТМ:</strong> <span id="p_brand"></span></div>
+
+  <!-- шапка -->
+  <div class="print-header">
+    <img src="logo.png" class="print-logo" onerror="this.style.display='none'">
+    <div class="print-title-block">
+      <h1>Бланк заміру дверних блоків</h1>
+      <div class="print-subtitle">Е-Монтаж — встановлення дверей та підлогових покриттів</div>
+    </div>
+    <div style="font-size:9pt; text-align:right; color:#555;">
+      <div><strong>Дата:</strong> <span id="p_date"></span></div>
+      <div><strong>Менеджер:</strong> <span id="p_manager"></span></div>
+    </div>
   </div>
 
+  <!-- інфо замовника -->
+  <div class="info-grid">
+    <div class="info-item"><strong>Магазин:</strong> <span id="p_shop"></span></div>
+    <div class="info-item"><strong>Адреса магазину:</strong> <span id="p_shop_addr"></span></div>
+    <div class="info-item"><strong>Замовник:</strong> <span id="p_client"></span></div>
+    <div class="info-item"><strong>Телефон:</strong> <span id="p_tel"></span></div>
+    <div class="info-item"><strong>Адреса монтажу:</strong> <span id="p_addr"></span></div>
+    <div class="info-item"><strong>Товар ТМ:</strong> <span id="p_brand"></span></div>
+  </div>
+
+  <!-- таблиця дверей -->
   <table>
     <thead>
       <tr>
@@ -692,40 +819,44 @@ canvas.sig-pad {
         <th>Кімната</th>
         <th>Вис. мм</th>
         <th>Шир. мм</th>
-        <th>Стіна</th>
+        <th>Стіна мм</th>
         <th>Підгот. проєм</th>
         <th>Блок В×Ш</th>
-        <th>Лишт.</th>
+        <th>Лиштва</th>
         <th>Відкр.</th>
-        <th>Напр.</th>
+        <th>Напрям</th>
         <th>Замок</th>
         <th>Підлога</th>
         <th>Ремонт</th>
         <th>Демонт.</th>
-        <th>Ціна</th>
+        <th>Ціна грн</th>
       </tr>
     </thead>
     <tbody id="p_doors"></tbody>
   </table>
 
-  <div class="photo-print" id="p_photos"></div>
+  <!-- фото -->
+  <div class="photo-section" id="p_photos"></div>
 
+  <!-- нотатки -->
   <div class="notes-block">
-    <strong>Нотатки:</strong>
-    <div id="p_notes"></div>
+    <strong>Нотатки / особливості:</strong>
+    <div id="p_notes" style="margin-top:3pt; min-height:14pt;"></div>
   </div>
 
+  <!-- підписи -->
   <div class="sig-area">
-    <div>
-      <div><strong>Менеджер:</strong></div>
+    <div class="sig-block">
+      <strong>Менеджер / майстер:</strong>
       <div class="sig-line"></div>
     </div>
-    <div>
-      <div><strong>Підпис замовника:</strong></div>
+    <div class="sig-block">
+      <strong>Підпис замовника:</strong>
       <img id="p_sig" class="sig-img" style="display:none;">
       <div class="sig-line" id="p_sig_line"></div>
     </div>
   </div>
+
 </div>
 
 <script>
@@ -1042,52 +1173,76 @@ function preparePrint() {
   document.getElementById('p_tel').textContent = gv('client_tel');
   document.getElementById('p_addr').textContent = gv('client_addr');
   document.getElementById('p_brand').textContent = gv('brand');
-  document.getElementById('p_notes').textContent = gv('notes');
+  document.getElementById('p_notes').textContent = gv('notes') || '—';
 
-  // signature
+  // підпис
+  var sigImg = document.getElementById('p_sig');
+  var sigLine = document.getElementById('p_sig_line');
   if (sigHasContent) {
-    var sigImg = document.getElementById('p_sig');
     sigImg.src = document.getElementById('sigCanvas').toDataURL('image/png');
     sigImg.style.display = 'block';
-    document.getElementById('p_sig_line').style.display = 'none';
+    sigLine.style.display = 'none';
+  } else {
+    sigImg.style.display = 'none';
+    sigLine.style.display = 'block';
   }
 
-  // table
+  // таблиця дверей
   var tbody = '';
   var allPhotos = [];
+
   for (var i = 0; i < doors.length; i++) {
     var d = doors[i];
+    var openLabel = d.open === 'R' ? 'Праве' : 'Ліве';
+    var dirLabel  = d.dir === 'внутр' ? 'Всередину' : 'Назовні';
+
     tbody += '<tr>';
-    tbody += '<td>' + (i+1) + '</td>';
-    tbody += '<td>' + (d.room||'') + '</td>';
-    tbody += '<td>' + (d.height||'') + '</td>';
-    tbody += '<td>' + (d.width||'') + '</td>';
-    tbody += '<td>' + (d.wall||'') + '</td>';
-    tbody += '<td style="font-size:7pt;">' + (d.prep||'') + '</td>';
-    tbody += '<td>' + (d.block_h||'') + '×' + (d.block_w||'') + '</td>';
-    tbody += '<td>' + (d.lishta||'') + '</td>';
-    tbody += '<td>' + (d.open||'') + '</td>';
-    tbody += '<td>' + (d.dir||'') + '</td>';
-    tbody += '<td>' + (d.lock||'') + '</td>';
-    tbody += '<td>' + (d.floor?'✓':'') + '</td>';
-    tbody += '<td>' + (d.repair?'✓':'') + '</td>';
-    tbody += '<td>' + (d.demolish?'✓':'') + '</td>';
-    tbody += '<td>' + (d.price||'') + '</td>';
+    tbody += '<td><strong>' + (i+1) + '</strong></td>';
+    tbody += '<td>' + (d.room||'—') + '</td>';
+    tbody += '<td>' + (d.height||'—') + '</td>';
+    tbody += '<td>' + (d.width||'—') + '</td>';
+    tbody += '<td>' + (d.wall||'—') + '</td>';
+    tbody += '<td style="font-size:7pt;text-align:left;">' + (d.prep||'—') + '</td>';
+    tbody += '<td>' + (d.block_h||'—') + '×' + (d.block_w||'—') + '</td>';
+    tbody += '<td>' + (d.lishta||'—') + '</td>';
+    tbody += '<td>' + openLabel + '</td>';
+    tbody += '<td>' + dirLabel + '</td>';
+    tbody += '<td>' + (d.lock||'—') + '</td>';
+    tbody += '<td>' + (d.floor ? '✓' : '') + '</td>';
+    tbody += '<td>' + (d.repair ? '✓' : '') + '</td>';
+    tbody += '<td>' + (d.demolish ? '✓' : '') + '</td>';
+    tbody += '<td><strong>' + (d.price ? d.price + ' грн' : '—') + '</strong></td>';
     tbody += '</tr>';
+
     if (d.photos && d.photos.length) {
-      allPhotos = allPhotos.concat(d.photos.map(function(p,pi) {
-        return { src: p, label: 'Двері №' + (i+1) + ', фото ' + (pi+1) };
-      }));
+      d.photos.forEach(function(p, pi) {
+        allPhotos.push({ src: p, label: 'Двері №' + (i+1) + ' — ' + (d.room||'кімната') });
+      });
     }
   }
+
+  // підсумок
+  var totalPrice = doors.reduce(function(sum, d) {
+    return sum + (parseFloat(d.price)||0);
+  }, 0);
+  if (doors.length > 0) {
+    tbody += '<tr style="background:#f0f0f0;">';
+    tbody += '<td colspan="14" style="text-align:right;font-weight:700;">Разом:</td>';
+    tbody += '<td><strong>' + totalPrice + ' грн</strong></td>';
+    tbody += '</tr>';
+  }
+
   document.getElementById('p_doors').innerHTML = tbody;
 
-  // photos
+  // фото
   var photosHtml = '';
   if (allPhotos.length) {
-    photosHtml = '<div style="margin-top:8pt;font-size:9pt;"><strong>Фото проємів:</strong></div><div>';
-    allPhotos.forEach(function(p) {
-      photosHtml += '<img src="' + p.src + '" style="width:70pt;height:70pt;object-fit:cover;border-radius:4pt;margin:4pt;" title="' + p.label + '">';
+    photosHtml = '<strong>Фото проємів (' + allPhotos.length + ' шт):</strong><div style="margin-top:4pt;">';
+    allPhotos.forEach(function(ph) {
+      photosHtml += '<span style="display:inline-block;margin:0 4pt 4pt 0;text-align:center;">';
+      photosHtml += '<img src="' + ph.src + '" style="display:block;width:72pt;height:72pt;object-fit:cover;border-radius:4pt;border:0.5pt solid #ddd;">';
+      photosHtml += '<span style="font-size:7pt;color:#666;">' + ph.label + '</span>';
+      photosHtml += '</span>';
     });
     photosHtml += '</div>';
   }
