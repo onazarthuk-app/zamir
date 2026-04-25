@@ -512,15 +512,20 @@ canvas.sig-pad {
 .print-doc { display: none; }
 
 @media print {
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
   .header, .section, .actions, .add-door-btn, .toast, .modal-overlay { display: none !important; }
+
+  html, body { background: #fff !important; margin: 0; padding: 0; }
 
   .print-doc {
     display: block !important;
-    padding: 12mm 14mm;
+    padding: 10mm 12mm;
     font-size: 10pt;
     line-height: 1.5;
     color: #000;
     font-family: Arial, sans-serif;
+    background: #fff;
   }
 
   .print-doc .print-header {
@@ -542,7 +547,7 @@ canvas.sig-pad {
   }
 
   .print-doc h1 {
-    font-size: 16pt;
+    font-size: 15pt;
     font-weight: 700;
     margin: 0 0 2pt;
   }
@@ -555,18 +560,22 @@ canvas.sig-pad {
   .print-doc .info-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 3pt 24pt;
+    gap: 4pt 20pt;
     margin-bottom: 10pt;
-    font-size: 9pt;
-    background: #f8f8f8;
-    padding: 8pt 10pt;
-    border-radius: 4pt;
-    border: 0.5pt solid #ddd;
+    font-size: 9.5pt;
+    background: #fff !important;
+    padding: 6pt 0;
+    border-top: 0.5pt solid #000;
+    border-bottom: 0.5pt solid #000;
+  }
+
+  .print-doc .info-item {
+    padding: 2pt 0;
   }
 
   .print-doc .info-item strong {
-    color: #555;
-    font-weight: 600;
+    color: #000;
+    font-weight: 700;
   }
 
   .print-doc table {
@@ -577,35 +586,38 @@ canvas.sig-pad {
   }
 
   .print-doc th {
-    background: #1c1c1e;
-    color: #fff;
+    background: #fff !important;
+    color: #000;
     font-weight: 700;
     padding: 4pt 4pt;
     text-align: center;
-    font-size: 7.5pt;
+    font-size: 8pt;
+    border: 0.75pt solid #000;
   }
 
   .print-doc td {
-    border: 0.5pt solid #ccc;
+    border: 0.5pt solid #000;
     padding: 4pt 4pt;
     text-align: center;
-    font-size: 8pt;
+    font-size: 8.5pt;
+    background: #fff !important;
   }
 
-  .print-doc tr:nth-child(even) td { background: #f9f9f9; }
+  .print-doc tr:nth-child(even) td { background: #fff !important; }
 
   .print-doc .notes-block {
     margin-top: 8pt;
-    font-size: 9pt;
-    padding: 6pt 8pt;
-    border: 0.5pt solid #ddd;
-    border-radius: 4pt;
-    background: #fafafa;
+    font-size: 9.5pt;
+    padding: 6pt 0;
+    border-top: 0.5pt solid #000;
+    border-bottom: 0.5pt solid #000;
+    background: #fff !important;
   }
 
   .print-doc .photo-section {
     margin-top: 8pt;
     font-size: 9pt;
+    background: #fff !important;
   }
 
   .print-doc .photo-section strong {
@@ -617,36 +629,42 @@ canvas.sig-pad {
     width: 72pt;
     height: 72pt;
     object-fit: cover;
-    border-radius: 4pt;
+    border-radius: 3pt;
     margin: 0 4pt 4pt 0;
-    border: 0.5pt solid #ddd;
+    border: 0.5pt solid #ccc;
   }
 
   .print-doc .sig-area {
-    margin-top: 14pt;
+    margin-top: 20pt;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 20pt;
-    font-size: 9pt;
-    border-top: 0.5pt solid #000;
-    padding-top: 10pt;
+    gap: 30pt;
+    font-size: 9.5pt;
+    border-top: 0.75pt solid #000;
+    padding-top: 14pt;
+  }
+
+  .print-doc .sig-block {
+    min-height: 80pt;
   }
 
   .print-doc .sig-block strong {
     display: block;
-    margin-bottom: 4pt;
-    font-size: 9pt;
+    margin-bottom: 6pt;
+    font-size: 10pt;
   }
 
   .print-doc .sig-line {
     border-bottom: 0.5pt solid #000;
-    margin-top: 24pt;
+    margin-top: 60pt;
   }
 
   .print-doc .sig-img {
-    height: 44pt;
+    height: 60pt;
     display: block;
-    margin-top: 4pt;
+    margin-top: 8pt;
+    border-bottom: 0.5pt solid #ccc;
+    padding-bottom: 4pt;
   }
 }
 </style>
