@@ -709,7 +709,7 @@ canvas.sig-pad {
     </div>
     <div class="ios-row">
       <div class="ios-row-label">Адреса</div>
-      <input type="text" id="shop_addr" placeholder="м. Шептицьки, вул..." onchange="save()">
+      <input type="text" id="shop_addr" placeholder="м. Львів, вул..." onchange="save()">
     </div>
     <div class="ios-row">
       <div class="ios-row-label">Менеджер</div>
@@ -724,7 +724,7 @@ canvas.sig-pad {
   <div class="ios-card">
     <div class="ios-row">
       <div class="ios-row-label">Ім'я</div>
-      <input type="text" id="client_name" placeholder="Іван Петренко" onchange="save()">
+      <input type="text" id="client_name" placeholder="Тарас Петренко" onchange="save()">
     </div>
     <div class="ios-row">
       <div class="ios-row-label">Адреса</div>
@@ -1096,14 +1096,14 @@ function renderDoors() {
     html += row('Підгот. проєм', '<input type="text" value="' + esc(d.prep) + '" placeholder="Опис..." onchange="updateDoor(' + id + ',\'prep\',this.value)">');
 
     // block
-    html += row('Блок висота', '<input type="number" value="' + (d.block_h||'') + '" placeholder="2000" onchange="updateDoor(' + id + ',\'block_h\',this.value)" inputmode="numeric">');
-    html += row('Блок ширина', '<input type="number" value="' + (d.block_w||'') + '" placeholder="700" onchange="updateDoor(' + id + ',\'block_w\',this.value)" inputmode="numeric">');
+    html += row('Полотно висота', '<input type="number" value="' + (d.block_h||'') + '" placeholder="2000" onchange="updateDoor(' + id + ',\'block_h\',this.value)" inputmode="numeric">');
+    html += row('Полотно ширина', '<input type="number" value="' + (d.block_w||'') + '" placeholder="700" onchange="updateDoor(' + id + ',\'block_w\',this.value)" inputmode="numeric">');
 
     // lishta
     html += rowSeg('Лиштва', id, 'lishta', [['1','1 к-кт'],['2','2 к-кт']], d.lishta);
 
     // open dir
-    html += rowSeg('Відкриття', id, 'open', [['R','Праве'],['L','Ліве']], d.open);
+    html += rowSeg('Відкривання', id, 'open', [['R','Праве'],['L','Ліве']], d.open);
     html += rowSeg('Напрямок', id, 'dir', [['внутр','Всередину'],['зовн','Назовні']], d.dir);
 
     // lock
@@ -1298,9 +1298,9 @@ function shareTxt() {
     text += '   Проєм: ' + (d.height||'—') + ' × ' + (d.width||'—') + ' мм\n';
     text += '   Товщина стіни: ' + (d.wall||'—') + ' мм\n';
     if (d.prep) text += '   Підготувати проєм: ' + d.prep + '\n';
-    text += '   Розмір блоку: ' + (d.block_h||'—') + ' × ' + (d.block_w||'—') + ' мм\n';
+    text += '   Розмір полотна: ' + (d.block_h||'—') + ' × ' + (d.block_w||'—') + ' мм\n';
     text += '   Лиштва: ' + (d.lishta === '1' ? '1 к-кт' : '2 к-кт') + '\n';
-    text += '   Відкриття: ' + (d.open === 'R' ? 'Праве' : 'Ліве') + '\n';
+    text += '   Відкривання: ' + (d.open === 'R' ? 'Праве' : 'Ліве') + '\n';
     text += '   Напрямок: ' + (d.dir === 'внутр' ? 'Всередину' : 'Назовні') + '\n';
     text += '   Замок: ' + (d.lock||'—') + '\n';
     var stан = [];
