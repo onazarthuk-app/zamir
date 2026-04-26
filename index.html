@@ -41,7 +41,7 @@ body {
 
 /* ── HEADER ── */
 .header {
-  padding: 54px 20px 18px;
+  padding: 46px 20px 10px;
   background: rgba(242,242,247,0.92);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -52,10 +52,10 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
 }
 
-.logo { width: 320px; height: auto; object-fit: contain; }
+.logo { width: 180px; height: 36px; object-fit: contain; }
 .logo-placeholder {
   font-size: 22px;
   font-weight: 800;
@@ -64,7 +64,7 @@ body {
 }
 
 .page-title {
-  font-size: 22px;
+  font-size: 17px;
   font-weight: 800;
   color: var(--text);
   letter-spacing: 0.2px;
@@ -181,29 +181,52 @@ textarea {
 /* ── RADIO / CHECK ── */
 .seg-ctrl {
   display: flex;
-  background: var(--bg);
+  background: rgba(255,59,48,0.08);
   border-radius: 8px;
   padding: 3px;
   gap: 2px;
+  border: 1px solid rgba(255,59,48,0.2);
 }
 
 .seg-btn {
   flex: 1;
-  padding: 6px 8px;
+  padding: 7px 10px;
   border-radius: 6px;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   text-align: center;
   cursor: pointer;
-  color: var(--text2);
+  color: var(--accent);
   transition: all 0.15s;
   white-space: nowrap;
 }
 
 .seg-btn.on {
-  background: var(--card);
-  color: var(--text);
-  box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(255,59,48,0.35);
+}
+
+/* центрування рядків з seg-ctrl */
+.ios-row.seg-row {
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+}
+
+.ios-row.seg-row .ios-row-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  min-width: unset;
+  text-align: center;
+}
+
+.ios-row.seg-row .seg-ctrl {
+  width: 100%;
 }
 
 .check-row {
@@ -359,7 +382,27 @@ canvas.sig-pad {
   padding: 2px 0;
 }
 
-/* ── ADD BTN ── */
+/* ── SIGNATURE BUTTON ── */
+.sig-open-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, var(--accent) 0%, #ff6b6b 100%);
+  border-radius: var(--r);
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(255,59,48,0.35);
+  letter-spacing: 0.3px;
+  font-family: 'Nunito', sans-serif;
+}
+
+.sig-open-btn:active { opacity: 0.85; transform: scale(0.98); }
 .add-door-btn {
   display: flex;
   align-items: center;
@@ -765,14 +808,13 @@ canvas.sig-pad {
 
 <!-- ПІДПИС ЗАМОВНИКА -->
 <div class="section">
-  <div class="sec-title">Підпис замовника</div>
-  <div class="ios-card">
-    <div class="sig-zone">
-      <div class="sig-canvas-wrap">
-        <canvas class="sig-pad" id="sigCanvas" width="700" height="160"></canvas>
-        <div class="sig-hint" id="sigHint">Підпишіться тут</div>
-      </div>
-      <div class="sig-clear" onclick="clearSig()">Очистити</div>
+  <button class="sig-open-btn" onclick="openSigWindow()">
+    ✍️ Підпис замовника
+  </button>
+  <div id="sigPreviewWrap" style="display:none; margin-top:10px;">
+    <div class="ios-card" style="padding:10px 16px; display:flex; align-items:center; justify-content:space-between;">
+      <img id="sigPreviewImg" style="height:48px; max-width:60%;">
+      <span style="font-size:13px; color:var(--accent); font-weight:600; cursor:pointer;" onclick="openSigWindow()">Змінити</span>
     </div>
   </div>
 </div>
@@ -922,78 +964,85 @@ function gv(id) { var e = document.getElementById(id); return e ? e.value : ''; 
 function setVal(id, val) { var e = document.getElementById(id); if (e && val) e.value = val; }
 
 /* ───── SIGNATURE PAD ───── */
-function initSig() {
-  var canvas = document.getElementById('sigCanvas');
-  var ctx = canvas.getContext('2d');
-  var rect;
+var sigDataUrl = '';
 
-  function getPos(e) {
-    rect = canvas.getBoundingClientRect();
-    var scaleX = canvas.width / rect.width;
-    var scaleY = canvas.height / rect.height;
-    var src = e.touches ? e.touches[0] : e;
-    return {
-      x: (src.clientX - rect.left) * scaleX,
-      y: (src.clientY - rect.top) * scaleY
-    };
-  }
+function openSigWindow() {
+  var html = '<!DOCTYPE html><html lang="uk"><head><meta charset="UTF-8">' +
+    '<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">' +
+    '<title>Підпис замовника</title>' +
+    '<style>' +
+    '*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}' +
+    'body{font-family:-apple-system,sans-serif;background:#f2f2f7;display:flex;flex-direction:column;height:100vh;padding:16px;}' +
+    'h2{font-size:20px;font-weight:800;color:#1c1c1e;margin-bottom:4px;}' +
+    'p{font-size:13px;color:#8e8e93;margin-bottom:12px;}' +
+    '.wrap{background:#fff;border-radius:14px;box-shadow:0 2px 12px rgba(0,0,0,0.1);overflow:hidden;flex:1;position:relative;display:flex;flex-direction:column;}' +
+    'canvas{flex:1;width:100%;touch-action:none;cursor:crosshair;}' +
+    '.hint{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:15px;color:#aeaeb2;pointer-events:none;text-align:center;}' +
+    '.hint.h{display:none;}' +
+    '.btns{display:flex;gap:10px;margin-top:12px;}' +
+    '.btn{flex:1;padding:14px;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:-apple-system,sans-serif;}' +
+    '.btn-red{background:linear-gradient(135deg,#ff3b30,#ff6b6b);color:#fff;box-shadow:0 4px 14px rgba(255,59,48,0.35);}' +
+    '.btn-clear{background:#e5e5ea;color:#3c3c43;}' +
+    '</style></head><body>' +
+    '<h2>Підпис замовника</h2>' +
+    '<p>Підпишіться пальцем у полі нижче</p>' +
+    '<div class="wrap">' +
+    '<canvas id="c"></canvas>' +
+    '<div class="hint" id="h">Підпишіться тут</div>' +
+    '</div>' +
+    '<div class="btns">' +
+    '<button class="btn btn-clear" onclick="clear()">Очистити</button>' +
+    '<button class="btn btn-red" onclick="confirm()">Підтвердити ✓</button>' +
+    '</div>' +
+    '<script>' +
+    'var c=document.getElementById("c"),ctx=c.getContext("2d"),drawing=false,has=false;' +
+    'function resize(){c.width=c.offsetWidth;c.height=c.offsetHeight;}' +
+    'window.addEventListener("resize",resize);resize();' +
+    'function pos(e){var r=c.getBoundingClientRect(),s=e.touches?e.touches[0]:e;return{x:s.clientX-r.left,y:s.clientY-r.top};}' +
+    'c.addEventListener("touchstart",function(e){e.preventDefault();drawing=true;var p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);document.getElementById("h").className="hint h";has=true;},{passive:false});' +
+    'c.addEventListener("touchmove",function(e){if(!drawing)return;e.preventDefault();var p=pos(e);ctx.lineWidth=2.5;ctx.lineCap="round";ctx.strokeStyle="#1c1c1e";ctx.lineTo(p.x,p.y);ctx.stroke();ctx.beginPath();ctx.moveTo(p.x,p.y);},{passive:false});' +
+    'c.addEventListener("touchend",function(){drawing=false;});' +
+    'c.addEventListener("mousedown",function(e){drawing=true;var p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);document.getElementById("h").className="hint h";has=true;});' +
+    'c.addEventListener("mousemove",function(e){if(!drawing)return;var p=pos(e);ctx.lineWidth=2.5;ctx.lineCap="round";ctx.strokeStyle="#1c1c1e";ctx.lineTo(p.x,p.y);ctx.stroke();ctx.beginPath();ctx.moveTo(p.x,p.y);});' +
+    'c.addEventListener("mouseup",function(){drawing=false;});' +
+    'function clear(){ctx.clearRect(0,0,c.width,c.height);has=false;document.getElementById("h").className="hint";}' +
+    'function confirm(){if(!has){alert("Будь ласка, поставте підпис");return;}' +
+    'var data=c.toDataURL("image/png",0.8);window.opener.receiveSig(data);window.close();}' +
+    '<\/script></body></html>';
 
-  function start(e) {
-    e.preventDefault();
-    sigDrawing = true;
-    var p = getPos(e);
-    ctx.beginPath();
-    ctx.moveTo(p.x, p.y);
-    document.getElementById('sigHint').classList.add('hidden');
-    sigHasContent = true;
-  }
-
-  function move(e) {
-    if (!sigDrawing) return;
-    e.preventDefault();
-    var p = getPos(e);
-    ctx.lineWidth = 2.5;
-    ctx.lineCap = 'round';
-    ctx.strokeStyle = '#1c1c1e';
-    ctx.lineTo(p.x, p.y);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(p.x, p.y);
-  }
-
-  function end(e) {
-    sigDrawing = false;
-    save();
-  }
-
-  canvas.addEventListener('touchstart', start, { passive: false });
-  canvas.addEventListener('touchmove', move, { passive: false });
-  canvas.addEventListener('touchend', end);
-  canvas.addEventListener('mousedown', start);
-  canvas.addEventListener('mousemove', move);
-  canvas.addEventListener('mouseup', end);
+  var w = window.open('', 'sig', 'width=400,height=600,top=100,left=100');
+  w.document.open();
+  w.document.write(html);
+  w.document.close();
 }
 
+function receiveSig(dataUrl) {
+  sigDataUrl = dataUrl;
+  sigHasContent = true;
+  var wrap = document.getElementById('sigPreviewWrap');
+  var img = document.getElementById('sigPreviewImg');
+  img.src = dataUrl;
+  wrap.style.display = 'block';
+  save();
+  showToast('✅ Підпис збережено');
+}
+
+function initSig() { /* підпис тепер в окремому вікні */ }
+
 function clearSig() {
-  var canvas = document.getElementById('sigCanvas');
-  var ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  sigDataUrl = '';
   sigHasContent = false;
-  document.getElementById('sigHint').classList.remove('hidden');
+  document.getElementById('sigPreviewWrap').style.display = 'none';
   save();
 }
 
 function restoreSig(dataUrl) {
   if (!dataUrl) return;
-  var img = new Image();
-  img.onload = function() {
-    var canvas = document.getElementById('sigCanvas');
-    var ctx = canvas.getContext('2d');
-    ctx.drawImage(img, 0, 0);
-    sigHasContent = true;
-    document.getElementById('sigHint').classList.add('hidden');
-  };
+  sigDataUrl = dataUrl;
+  sigHasContent = true;
+  var img = document.getElementById('sigPreviewImg');
   img.src = dataUrl;
+  document.getElementById('sigPreviewWrap').style.display = 'block';
 }
 
 /* ───── DOORS ───── */
@@ -1176,7 +1225,7 @@ function rowSeg(label, id, field, opts, current) {
   var segs = opts.map(function(o) {
     return '<div class="seg-btn ' + (current === o[0] ? 'on' : '') + '" onclick="setRadio(' + id + ',\'' + field + '\',\'' + o[0] + '\')">' + o[1] + '</div>';
   }).join('');
-  return '<div class="ios-row"><div class="ios-row-label">' + label + '</div><div class="seg-ctrl">' + segs + '</div></div>';
+  return '<div class="ios-row seg-row"><div class="ios-row-label">' + label + '</div><div class="seg-ctrl">' + segs + '</div></div>';
 }
 
 function esc(s) { return (s||'').replace(/"/g,'&quot;'); }
@@ -1196,8 +1245,8 @@ function preparePrint() {
   // підпис
   var sigImg = document.getElementById('p_sig');
   var sigLine = document.getElementById('p_sig_line');
-  if (sigHasContent) {
-    sigImg.src = document.getElementById('sigCanvas').toDataURL('image/png');
+  if (sigHasContent && sigDataUrl) {
+    sigImg.src = sigDataUrl;
     sigImg.style.display = 'block';
     sigLine.style.display = 'none';
   } else {
