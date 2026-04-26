@@ -568,7 +568,7 @@ canvas.sig-pad {
     print-color-adjust: exact !important;
   }
 
-  body, .header, .section, .actions, .add-door-btn, .toast { display: none !important; }
+  .header, .section, .actions, .add-door-btn, .toast { display: none !important; }
 
   .print-doc {
     display: block !important;
@@ -779,7 +779,7 @@ canvas.sig-pad {
     <span class="btn-icon">☁️</span>
     <span class="btn-label">Хмара</span>
   </button>
-  <button class="action-btn btn-pdf" onclick="savePDF()">
+  <button class="action-btn btn-pdf" onclick="printDoc()">
     <span class="btn-icon">🖨️</span>
     <span class="btn-label">Друк</span>
   </button>
@@ -1241,7 +1241,39 @@ function savePDF() {
 
 function printDoc() {
   preparePrint();
-  window.print();
+
+  var el = document.getElementById('printable');
+  var content = el.innerHTML;
+
+  var html = '<!DOCTYPE html><html lang="uk"><head>' +
+    '<meta charset="UTF-8">' +
+    '<meta name="viewport" content="width=device-width,initial-scale=1">' +
+    '<title>Бланк замірів</title>' +
+    '<style>' +
+    '*{box-sizing:border-box;margin:0;padding:0;}' +
+    'body{font-family:Arial,sans-serif;font-size:10pt;color:#000;padding:10mm 12mm;background:#fff;}' +
+    'h1{font-size:15pt;font-weight:700;text-align:center;margin-bottom:10pt;}' +
+    '.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:4pt 20pt;margin-bottom:10pt;font-size:9pt;border-top:1pt solid #000;border-bottom:1pt solid #000;padding:6pt 0;}' +
+    'table{width:100%;border-collapse:collapse;font-size:8pt;margin-bottom:10pt;}' +
+    'th{background:#222;color:#fff;font-weight:700;padding:5pt 4pt;text-align:center;border:1pt solid #000;}' +
+    'td{border:1pt solid #000;padding:4pt;text-align:center;}' +
+    'tr:nth-child(even) td{background:#f5f5f5;}' +
+    '.notes-block{margin-top:8pt;font-size:9pt;border:1pt solid #000;padding:6pt;}' +
+    '.sig-area{margin-top:20pt;display:grid;grid-template-columns:1fr 1fr;gap:20pt;font-size:9pt;border-top:1pt solid #000;padding-top:12pt;}' +
+    '.sig-line{border-bottom:1pt solid #000;margin-top:50pt;}' +
+    '.sig-img{max-height:50pt;margin-top:6pt;}' +
+    '.print-logo{height:30pt;margin-bottom:8pt;}' +
+    '.photo-print img{width:70pt;height:70pt;object-fit:cover;margin:4pt;}' +
+    '</style></head><body>' +
+    content +
+    '<script>window.onload=function(){window.print();window.onafterprint=function(){window.close();};};<\/script>' +
+    '</body></html>';
+
+  var w = window.open('', '_blank', 'width=900,height=700');
+  if (!w) { showToast('⚠️ Дозвольте спливаючі вікна'); return; }
+  w.document.open();
+  w.document.write(html);
+  w.document.close();
 }
 
 /* ───── SHARE ───── */
