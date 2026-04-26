@@ -55,7 +55,7 @@ body {
   gap: 6px;
 }
 
-.logo { width: 320px; height: auto; object-fit: contain; }
+.logo { width: 220px; height: auto; object-fit: contain; }
 .logo-placeholder {
   font-size: 22px;
   font-weight: 800;
@@ -64,10 +64,10 @@ body {
 }
 
 .page-title {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text2);
-  letter-spacing: 0.3px;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: 0.2px;
 }
 
 /* ── SECTIONS ── */
@@ -826,8 +826,8 @@ canvas.sig-pad {
         <th>Шир. мм</th>
         <th>Стіна</th>
         <th>Підгот. проєм</th>
-        <th>Полотно В×Ш</th>
-        <th>Лиштва.</th>
+        <th>Блок В×Ш</th>
+        <th>Лишт.</th>
         <th>Відкр.</th>
         <th>Напр.</th>
         <th>Замок</th>
@@ -1096,15 +1096,15 @@ function renderDoors() {
     html += row('Підгот. проєм', '<input type="text" value="' + esc(d.prep) + '" placeholder="Опис..." onchange="updateDoor(' + id + ',\'prep\',this.value)">');
 
     // block
-    html += row('Полотно висота', '<input type="number" value="' + (d.block_h||'') + '" placeholder="2000" onchange="updateDoor(' + id + ',\'block_h\',this.value)" inputmode="numeric">');
-    html += row('Полотно ширина', '<input type="number" value="' + (d.block_w||'') + '" placeholder="700" onchange="updateDoor(' + id + ',\'block_w\',this.value)" inputmode="numeric">');
+    html += row('Блок висота', '<input type="number" value="' + (d.block_h||'') + '" placeholder="2000" onchange="updateDoor(' + id + ',\'block_h\',this.value)" inputmode="numeric">');
+    html += row('Блок ширина', '<input type="number" value="' + (d.block_w||'') + '" placeholder="700" onchange="updateDoor(' + id + ',\'block_w\',this.value)" inputmode="numeric">');
 
     // lishta
     html += rowSeg('Лиштва', id, 'lishta', [['1','1 к-кт'],['2','2 к-кт']], d.lishta);
 
     // open dir
-    html += rowSeg('Відкривання', id, 'open', [['R','Праве'],['L','Ліве']], d.open);
-    html += rowSeg('Напрямок', id, 'dir', [['Внутр','Всередину'],['Зовн','Назовні']], d.dir);
+    html += rowSeg('Відкриття', id, 'open', [['R','Праве'],['L','Ліве']], d.open);
+    html += rowSeg('Напрямок', id, 'dir', [['внутр','Всередину'],['зовн','Назовні']], d.dir);
 
     // lock
     html += row('Замок', '<input type="text" value="' + esc(d.lock) + '" placeholder="WC, засувка..." onchange="updateDoor(' + id + ',\'lock\',this.value)">');
@@ -1278,20 +1278,43 @@ function printDoc() {
 
 /* ───── SHARE ───── */
 function shareTxt() {
-  var text = '📋 Бланк замірів\n\n';
-  text += '📅 Дата: ' + gv('date') + '\n';
-  text += '👤 Замовник: ' + gv('client_name') + '\n';
-  text += '📞 Тел: ' + gv('client_tel') + '\n';
-  text += '📍 ' + gv('client_addr') + '\n\n';
-  text += '🚪 Двері:\n';
+  var text = '📋 БЛАНК ЗАМІРІВ ДВЕРЕЙ\n';
+  text += '══════════════════════\n\n';
+
+  text += '📅 Дата: ' + (gv('date') || '—') + '\n';
+  text += '🏪 Магазин: ' + (gv('shop') || '—') + '\n';
+  text += '📍 Адреса магазину: ' + (gv('shop_addr') || '—') + '\n';
+  text += '👤 Менеджер: ' + (gv('manager') || '—') + '\n\n';
+
+  text += '━━━ ЗАМОВНИК ━━━\n';
+  text += '👤 Ім\'я: ' + (gv('client_name') || '—') + '\n';
+  text += '📞 Телефон: ' + (gv('client_tel') || '—') + '\n';
+  text += '📍 Адреса монтажу: ' + (gv('client_addr') || '—') + '\n';
+  text += '🚪 Товар ТМ: ' + (gv('brand') || '—') + '\n\n';
+
+  text += '━━━ ДВЕРІ (' + doors.length + ' шт) ━━━\n';
   doors.forEach(function(d, i) {
-    text += (i+1) + '. ' + (d.room||'—') + ': ' + d.height + '×' + d.width + ' мм';
-    text += ', блок ' + d.block_h + '×' + d.block_w;
-    text += ', ' + (d.open==='R'?'праве':'ліве') + ', ' + d.dir;
-    if (d.price) text += ', ' + d.price + ' грн';
-    text += '\n';
+    text += '\n🚪 Двері №' + (i+1) + (d.room ? ' — ' + d.room : '') + '\n';
+    text += '   Проєм: ' + (d.height||'—') + ' × ' + (d.width||'—') + ' мм\n';
+    text += '   Товщина стіни: ' + (d.wall||'—') + ' мм\n';
+    if (d.prep) text += '   Підготувати проєм: ' + d.prep + '\n';
+    text += '   Розмір блоку: ' + (d.block_h||'—') + ' × ' + (d.block_w||'—') + ' мм\n';
+    text += '   Лиштва: ' + (d.lishta === '1' ? '1 к-кт' : '2 к-кт') + '\n';
+    text += '   Відкриття: ' + (d.open === 'R' ? 'Праве' : 'Ліве') + '\n';
+    text += '   Напрямок: ' + (d.dir === 'внутр' ? 'Всередину' : 'Назовні') + '\n';
+    text += '   Замок: ' + (d.lock||'—') + '\n';
+    var stан = [];
+    if (d.floor)   stан.push('Підлога');
+    if (d.repair)  stан.push('Ремонт');
+    if (d.demolish) stан.push('Демонтаж');
+    if (stан.length) text += '   Роботи: ' + stан.join(', ') + '\n';
+    if (d.price) text += '   💰 Ціна монтажу: ' + d.price + ' грн\n';
   });
-  if (gv('notes')) text += '\n📝 ' + gv('notes');
+
+  var total = doors.reduce(function(s,d){ return s + (parseFloat(d.price)||0); }, 0);
+  if (total > 0) text += '\n💰 РАЗОМ: ' + total + ' грн\n';
+
+  if (gv('notes')) text += '\n📝 Нотатки: ' + gv('notes') + '\n';
 
   if (navigator.share) {
     navigator.share({ title: 'Бланк замірів', text: text }).catch(function(){});
