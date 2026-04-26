@@ -55,7 +55,7 @@ body {
   gap: 6px;
 }
 
-.logo { width: 320px; height: auto; object-fit: contain; }
+.logo { width: 220px; height: auto; object-fit: contain; }
 .logo-placeholder {
   font-size: 22px;
   font-weight: 800;
@@ -709,7 +709,7 @@ canvas.sig-pad {
     </div>
     <div class="ios-row">
       <div class="ios-row-label">Адреса</div>
-      <input type="text" id="shop_addr" placeholder="м. Львів, вул..." onchange="save()">
+      <input type="text" id="shop_addr" placeholder="м. Шептицьки, вул..." onchange="save()">
     </div>
     <div class="ios-row">
       <div class="ios-row-label">Менеджер</div>
@@ -724,7 +724,7 @@ canvas.sig-pad {
   <div class="ios-card">
     <div class="ios-row">
       <div class="ios-row-label">Ім'я</div>
-      <input type="text" id="client_name" placeholder="Тарас Петренко" onchange="save()">
+      <input type="text" id="client_name" placeholder="Іван Петренко" onchange="save()">
     </div>
     <div class="ios-row">
       <div class="ios-row-label">Адреса</div>
@@ -1096,14 +1096,14 @@ function renderDoors() {
     html += row('Підгот. проєм', '<input type="text" value="' + esc(d.prep) + '" placeholder="Опис..." onchange="updateDoor(' + id + ',\'prep\',this.value)">');
 
     // block
-    html += row('Полотно висота', '<input type="number" value="' + (d.block_h||'') + '" placeholder="2000" onchange="updateDoor(' + id + ',\'block_h\',this.value)" inputmode="numeric">');
-    html += row('Полотно ширина', '<input type="number" value="' + (d.block_w||'') + '" placeholder="700" onchange="updateDoor(' + id + ',\'block_w\',this.value)" inputmode="numeric">');
+    html += row('Блок висота', '<input type="number" value="' + (d.block_h||'') + '" placeholder="2000" onchange="updateDoor(' + id + ',\'block_h\',this.value)" inputmode="numeric">');
+    html += row('Блок ширина', '<input type="number" value="' + (d.block_w||'') + '" placeholder="700" onchange="updateDoor(' + id + ',\'block_w\',this.value)" inputmode="numeric">');
 
     // lishta
     html += rowSeg('Лиштва', id, 'lishta', [['1','1 к-кт'],['2','2 к-кт']], d.lishta);
 
     // open dir
-    html += rowSeg('Відкривання', id, 'open', [['R','Праве'],['L','Ліве']], d.open);
+    html += rowSeg('Відкриття', id, 'open', [['R','Праве'],['L','Ліве']], d.open);
     html += rowSeg('Напрямок', id, 'dir', [['внутр','Всередину'],['зовн','Назовні']], d.dir);
 
     // lock
@@ -1207,8 +1207,14 @@ function preparePrint() {
     tbody += '<td>' + (d.price||'') + '</td>';
     tbody += '</tr>';
     if (d.photos && d.photos.length) {
-      allPhotos = allPhotos.concat(d.photos.map(function(p,pi) {
-        return { src: p, label: 'Двері №' + (i+1) + ', фото ' + (pi+1) };
+      allPhotos = allPhotos.concat(d.photos.map(function(p, pi) {
+        return {
+          src: p,
+          num: i + 1,
+          room: d.room || '',
+          photoIdx: pi + 1,
+          total: d.photos.length
+        };
       }));
     }
   }
@@ -1217,9 +1223,15 @@ function preparePrint() {
   // photos
   var photosHtml = '';
   if (allPhotos.length) {
-    photosHtml = '<div style="margin-top:8pt;font-size:9pt;"><strong>Фото проємів:</strong></div><div>';
+    photosHtml = '<div style="margin-top:10pt;"><strong style="font-size:9pt;">Фото проємів:</strong></div>';
+    photosHtml += '<div style="display:flex;flex-wrap:wrap;gap:8pt;margin-top:6pt;">';
     allPhotos.forEach(function(p) {
-      photosHtml += '<img src="' + p.src + '" style="width:70pt;height:70pt;object-fit:cover;border-radius:4pt;margin:4pt;" title="' + p.label + '">';
+      var caption = '№' + p.num + (p.room ? ' — ' + p.room : '');
+      if (p.total > 1) caption += ' (' + p.photoIdx + '/' + p.total + ')';
+      photosHtml += '<div style="display:inline-block;text-align:center;">';
+      photosHtml += '<img src="' + p.src + '" style="display:block;width:75pt;height:75pt;object-fit:cover;border-radius:4pt;border:0.5pt solid #ccc;">';
+      photosHtml += '<div style="font-size:7pt;color:#333;margin-top:2pt;max-width:75pt;">' + caption + '</div>';
+      photosHtml += '</div>';
     });
     photosHtml += '</div>';
   }
@@ -1263,7 +1275,11 @@ function printDoc() {
     '.sig-line{border-bottom:1pt solid #000;margin-top:50pt;}' +
     '.sig-img{max-height:50pt;margin-top:6pt;}' +
     '.print-logo{height:30pt;margin-bottom:8pt;}' +
-    '.photo-print img{width:70pt;height:70pt;object-fit:cover;margin:4pt;}' +
+    '.photo-print{margin-top:10pt;}' +
+    '.photo-print .photos-wrap{display:flex;flex-wrap:wrap;gap:8pt;margin-top:6pt;}' +
+    '.photo-print .photo-item{display:inline-block;text-align:center;}' +
+    '.photo-print img{display:block;width:75pt;height:75pt;object-fit:cover;border-radius:4pt;border:0.5pt solid #ccc;}' +
+    '.photo-print .photo-cap{font-size:7pt;color:#333;margin-top:2pt;max-width:75pt;}' +
     '</style></head><body>' +
     content +
     '<script>window.onload=function(){window.print();window.onafterprint=function(){window.close();};};<\/script>' +
@@ -1298,9 +1314,9 @@ function shareTxt() {
     text += '   Проєм: ' + (d.height||'—') + ' × ' + (d.width||'—') + ' мм\n';
     text += '   Товщина стіни: ' + (d.wall||'—') + ' мм\n';
     if (d.prep) text += '   Підготувати проєм: ' + d.prep + '\n';
-    text += '   Розмір полотна: ' + (d.block_h||'—') + ' × ' + (d.block_w||'—') + ' мм\n';
+    text += '   Розмір блоку: ' + (d.block_h||'—') + ' × ' + (d.block_w||'—') + ' мм\n';
     text += '   Лиштва: ' + (d.lishta === '1' ? '1 к-кт' : '2 к-кт') + '\n';
-    text += '   Відкривання: ' + (d.open === 'R' ? 'Праве' : 'Ліве') + '\n';
+    text += '   Відкриття: ' + (d.open === 'R' ? 'Праве' : 'Ліве') + '\n';
     text += '   Напрямок: ' + (d.dir === 'внутр' ? 'Всередину' : 'Назовні') + '\n';
     text += '   Замок: ' + (d.lock||'—') + '\n';
     var stан = [];
