@@ -55,7 +55,7 @@ body {
   gap: 6px;
 }
 
-.logo { width: 220px; height: auto; object-fit: contain; }
+.logo { width: 320px; height: auto; object-fit: contain; }
 .logo-placeholder {
   font-size: 22px;
   font-weight: 800;
@@ -826,8 +826,8 @@ canvas.sig-pad {
         <th>Шир. мм</th>
         <th>Стіна</th>
         <th>Підгот. проєм</th>
-        <th>Блок В×Ш</th>
-        <th>Лишт.</th>
+        <th>Полотно В×Ш</th>
+        <th>Лиштва.</th>
         <th>Відкр.</th>
         <th>Напр.</th>
         <th>Замок</th>
@@ -1096,15 +1096,15 @@ function renderDoors() {
     html += row('Підгот. проєм', '<input type="text" value="' + esc(d.prep) + '" placeholder="Опис..." onchange="updateDoor(' + id + ',\'prep\',this.value)">');
 
     // block
-    html += row('Блок висота', '<input type="number" value="' + (d.block_h||'') + '" placeholder="2000" onchange="updateDoor(' + id + ',\'block_h\',this.value)" inputmode="numeric">');
-    html += row('Блок ширина', '<input type="number" value="' + (d.block_w||'') + '" placeholder="700" onchange="updateDoor(' + id + ',\'block_w\',this.value)" inputmode="numeric">');
+    html += row('Полотно висота', '<input type="number" value="' + (d.block_h||'') + '" placeholder="2000" onchange="updateDoor(' + id + ',\'block_h\',this.value)" inputmode="numeric">');
+    html += row('Полотно ширина', '<input type="number" value="' + (d.block_w||'') + '" placeholder="700" onchange="updateDoor(' + id + ',\'block_w\',this.value)" inputmode="numeric">');
 
     // lishta
     html += rowSeg('Лиштва', id, 'lishta', [['1','1 к-кт'],['2','2 к-кт']], d.lishta);
 
     // open dir
-    html += rowSeg('Відкриття', id, 'open', [['R','Праве'],['L','Ліве']], d.open);
-    html += rowSeg('Напрямок', id, 'dir', [['внутр','Всередину'],['зовн','Назовні']], d.dir);
+    html += rowSeg('Відкривання', id, 'open', [['R','Праве'],['L','Ліве']], d.open);
+    html += rowSeg('Напрямок', id, 'dir', [['Внутр','Всередину'],['Зовн','Назовні']], d.dir);
 
     // lock
     html += row('Замок', '<input type="text" value="' + esc(d.lock) + '" placeholder="WC, засувка..." onchange="updateDoor(' + id + ',\'lock\',this.value)">');
