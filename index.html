@@ -3,7 +3,11 @@
 <head>
 <link rel="apple-touch-icon" href="icon.png">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#f2f2f7">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="icon" href="icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Заміри">
@@ -41,7 +45,7 @@ body {
 
 /* ── HEADER ── */
 .header {
-  padding: 54px 20px 18px;
+  padding: calc(10px + env(safe-area-inset-top)) 16px 10px;
   background: rgba(242,242,247,0.92);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -55,7 +59,7 @@ body {
   gap: 6px;
 }
 
-.logo { width: 280px; height: auto; object-fit: contain; }
+.logo { width: min(240px, 66vw); height: auto; object-fit: contain; }
 .logo-placeholder {
   font-size: 22px;
   font-weight: 800;
@@ -117,7 +121,7 @@ input[type=text], input[type=date], input[type=tel], input[type=number], select,
   background: none;
   border: none;
   outline: none;
-  font-size: 15px;
+  font-size: 16px; /* менше 16px iPhone збільшує екран під час введення */
   font-family: 'Nunito', sans-serif;
   color: var(--text2);
   text-align: right;
@@ -130,7 +134,7 @@ textarea {
   text-align: left;
   padding: 13px 16px;
   width: 100%;
-  font-size: 15px;
+  font-size: 16px;
   resize: none;
   border-radius: var(--r);
   border: none;
@@ -191,7 +195,7 @@ textarea {
 
 .seg-btn {
   flex: 1;
-  padding: 8px 10px;
+  padding: 8px 4px;
   border-radius: 8px;
   font-size: 13px;
   font-weight: 700;
@@ -218,7 +222,19 @@ select {
   appearance: none;
   text-align-last: right;
   cursor: pointer;
+  padding-right: 16px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23aeaeb2' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right center / 10px 6px;
 }
+
+input[type=date] {
+  -webkit-appearance: none;
+  appearance: none;
+  min-height: 22px;
+}
+input[type=date]::-webkit-date-and-time-value { text-align: right; }
+input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 
 
 .seg-btn.on {
@@ -515,7 +531,7 @@ body { padding-bottom: calc(140px + env(safe-area-inset-bottom)); }
 }
 .action-btn { flex-direction: row; padding: 9px 6px; gap: 6px; }
 .action-btn .btn-icon { font-size: 16px; }
-.meas-section, .door-card { scroll-margin-top: 170px; }
+.meas-section, .door-card { scroll-margin-top: 110px; }
 .meas-section { display: none; }
 .meas-section.on { display: block; }
 .calc-val { flex: 1; text-align: right; font-size: 15px; font-weight: 800; color: var(--accent); }
@@ -608,6 +624,112 @@ body { padding-bottom: calc(140px + env(safe-area-inset-bottom)); }
 .toast.show {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
+}
+
+/* ── АДАПТАЦІЯ ── */
+.section {
+  padding-left: max(16px, env(safe-area-inset-left));
+  padding-right: max(16px, env(safe-area-inset-right));
+}
+.actions {
+  padding-left: max(16px, env(safe-area-inset-left));
+  padding-right: max(16px, env(safe-area-inset-right));
+}
+button, .seg-btn, .ios-toggle { touch-action: manipulation; }
+input:focus-visible, select:focus-visible, textarea:focus-visible { color: var(--text); }
+button:focus-visible, select:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+/* Клавіатура на телефоні: нижнє меню не закриває поле введення */
+@media screen and (max-width: 1023px) {
+  body.typing .actions { display: none; }
+}
+
+/* Найвужчі телефони */
+@media screen and (max-width: 360px) {
+  .seg-btn { font-size: 12px; }
+  .tab-btn { font-size: 11px; }
+  .ios-row, .check-row { padding-left: 12px; padding-right: 12px; }
+  .ios-row-label.wide { min-width: 110px; }
+}
+
+/* Телефон лежить горизонтально: мало висоти */
+@media screen and (max-height: 500px) and (max-width: 1023px) {
+  .header { position: static; }
+  .logo { width: 170px; }
+  .meas-section, .door-card { scroll-margin-top: 10px; }
+  .actions { flex-direction: row; padding-top: 6px; padding-bottom: calc(6px + env(safe-area-inset-bottom)); }
+  .menu-row { flex: 1; }
+  .tab-btn { padding: 6px 2px; font-size: 11px; }
+  .action-btn { padding: 6px 4px; }
+  body { padding-bottom: calc(70px + env(safe-area-inset-bottom)); }
+  .toast { bottom: calc(76px + env(safe-area-inset-bottom)); }
+}
+
+/* Планшет і ширше: форма у дві колонки */
+@media screen and (min-width: 700px) {
+  .app-main {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+    max-width: 1240px;
+    margin: 0 auto;
+  }
+  .meas-section { grid-column: 1 / -1; }
+  .door-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .door-body .ios-row:not(.seg-row), .door-body .check-row { align-self: stretch; }
+  .door-body .photo-zone, .door-body .ios-row:nth-last-child(2) { grid-column: 1 / -1; }
+  .add-door-btn { max-width: 360px; margin-left: auto; margin-right: auto; }
+}
+
+/* Комп'ютер: меню збоку */
+@media screen and (min-width: 1024px) {
+  body { padding: 12px 12px 32px 292px; }
+  .header {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 280px;
+    padding: 22px 20px 16px;
+    background: var(--card);
+    border-bottom: none;
+    border-right: 0.5px solid var(--border);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    z-index: 60;
+  }
+  .logo { width: 240px; }
+  .actions {
+    left: 0;
+    right: auto;
+    top: 114px;
+    bottom: 0;
+    width: 280px;
+    padding: 12px 20px 24px;
+    justify-content: space-between;
+    overflow-y: auto;
+    background: var(--card);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-top: none;
+    border-right: 0.5px solid var(--border);
+  }
+  .menu-row { flex-direction: column; flex: none; }
+  .tab-btn { flex: none; padding: 13px 14px; font-size: 14px; text-align: left; }
+  .action-btn { flex: none; padding: 11px 8px; }
+  .meas-section, .door-card { scroll-margin-top: 16px; }
+  .toast { bottom: 32px; left: calc(50% + 140px); }
+}
+
+/* Вказівник миші: підказка, що елемент можна натиснути */
+@media (hover: hover) {
+  .seg-btn:not(.on):hover, .tab-btn:not(.on):hover { background: rgba(255,59,48,0.14); }
+  .add-door-btn:hover { background: #f7f9ff; }
+  .action-btn:hover { filter: brightness(1.08); }
+  .door-del-btn:hover { background: rgba(255,255,255,0.4); }
+  .photo-add-btn:hover { border-color: var(--blue); }
 }
 
 /* ── PRINT ── */
@@ -748,6 +870,8 @@ body { padding-bottom: calc(140px + env(safe-area-inset-bottom)); }
   <div class="page-title" id="pageTitle">Заміри дверей</div>
 </div>
 
+<main class="app-main">
+
 <!-- ДАТА ТА МІСЦЕ -->
 <div class="section">
   <div class="sec-title">Дата та місце</div>
@@ -870,6 +994,8 @@ body { padding-bottom: calc(140px + env(safe-area-inset-bottom)); }
   </div>
 </div>
 
+</main>
+
 <!-- ACTION BUTTONS -->
 <div class="actions">
   <div class="menu-row">
@@ -980,6 +1106,7 @@ var MANAGER_OTHER = '__other';
 var PREP_STD = 'Стандарт', PREP_NONSTD = 'Нестандарт', PREP_TO_STD = 'Підготують до стандарту';
 var LEAF_H = ['2000'];
 var LEAF_W = ['1000','900','800','700','600'];
+var LEAF_W2 = ['800','700','600','500','400'];
 var LOCKS = ['Ручка','WC','Ключ-ключ','Ключ-поворотник'];
 var ROOMS = ['Вітальня','Спальня','Кухня','Санвузол','Туалет','Ванна','Гардероб','Кладова','Дитяча'];
 var ROOM_OTHER = '__other';
@@ -1058,6 +1185,7 @@ function migrateDoor(d) {
     d.prep = isStd ? PREP_STD : PREP_NONSTD;
     if (isStd) d.block_h = LEAF_H[0];
   }
+  if (d.prep !== PREP_NONSTD && d.block_w2 && LEAF_W2.indexOf(String(d.block_w2)) < 0) d.block_w2 = '';
   if (d.lock && LOCKS.indexOf(d.lock) < 0) {
     extra.push('Замок: ' + d.lock);
     d.lock = '';
@@ -1140,6 +1268,7 @@ function initSig() {
   }
 
   function end(e) {
+    if (!sigDrawing) return;
     sigDrawing = false;
     save();
   }
@@ -1150,6 +1279,7 @@ function initSig() {
   canvas.addEventListener('mousedown', start);
   canvas.addEventListener('mousemove', move);
   canvas.addEventListener('mouseup', end);
+  canvas.addEventListener('mouseleave', end);
 }
 
 function clearSig() {
@@ -1381,7 +1511,7 @@ function setPrep(id, val) {
   if (val !== PREP_NONSTD) {
     d.block_h = LEAF_H[0];
     if (LEAF_W.indexOf(String(d.block_w)) < 0) d.block_w = '';
-    if (LEAF_W.indexOf(String(d.block_w2)) < 0) d.block_w2 = '';
+    if (LEAF_W2.indexOf(String(d.block_w2)) < 0) d.block_w2 = '';
   }
   renderDoors();
   save();
@@ -1499,7 +1629,7 @@ function renderDoors() {
     } else {
       html += rowSeg('Полотно висота', id, 'block_h', pairs(LEAF_H), String(d.block_h), 'seg-btn-single');
       html += rowSeg(w1, id, 'block_w', pairs(LEAF_W), String(d.block_w));
-      if (d.double) html += rowSeg(w2, id, 'block_w2', pairs(LEAF_W), String(d.block_w2));
+      if (d.double) html += rowSeg(w2, id, 'block_w2', pairs(LEAF_W2), String(d.block_w2));
     }
 
     // lishta
@@ -1970,6 +2100,18 @@ function showToast(msg) {
 }
 
 /* ───── INIT ───── */
+if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) {
+  var isTypingField = function(el) {
+    return el && (el.tagName === 'TEXTAREA' || (el.tagName === 'INPUT' && el.type !== 'file' && el.type !== 'date'));
+  };
+  document.addEventListener('focusin', function(e) {
+    if (isTypingField(e.target)) document.body.classList.add('typing');
+  });
+  document.addEventListener('focusout', function() {
+    document.body.classList.remove('typing');
+  });
+}
+
 initManagers();
 initSig();
 load();
