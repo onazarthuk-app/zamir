@@ -914,21 +914,164 @@ input.sheet-search {
   .auth, .modal-overlay, .profile-btn { display: none !important; }
 }
 
-.lang-pick { display: flex; justify-content: flex-end; align-items: center; gap: 6px; margin-bottom: 14px; font-size: 16px; }
-select.lang-sel {
-  flex: none;
-  text-align: left;
-  text-align-last: left;
-  background-color: var(--card);
-  background-position: right 10px center;
-  border-radius: 10px;
+.lang-pick { display: flex; justify-content: flex-end; margin-bottom: 14px; }
+.lang-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px 7px 8px;
+  border: none;
+  border-radius: 100px;
+  background: var(--card);
   box-shadow: var(--shadow);
-  padding: 8px 30px 8px 12px;
+  color: var(--text);
+  font-family: 'Nunito', sans-serif;
   font-size: 15px;
   font-weight: 700;
-  color: var(--text);
+  cursor: pointer;
 }
-.ios-row select.lang-sel { box-shadow: none; background-color: transparent; padding: 0 16px 0 0; background-position: right center; text-align-last: right; font-weight: 400; color: var(--text2); flex: 1; }
+.lang-btn .chev { width: 10px; height: 6px; color: var(--text3); }
+.lang-btn.inline { margin-left: auto; padding: 4px 0; background: none; box-shadow: none; color: var(--text2); font-weight: 600; }
+.flag {
+  width: 24px;
+  height: 16px;
+  border-radius: 3px;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.12);
+  position: relative;
+}
+.flag svg { display: block; width: 100%; height: 100%; }
+.flag::after { content: ''; position: absolute; inset: 0; border-radius: 3px; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1); }
+.lang-backdrop { position: fixed; inset: 0; z-index: 700; }
+.lang-menu {
+  position: fixed;
+  z-index: 701;
+  width: 224px;
+  padding: 6px;
+  background: var(--card);
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.18), 0 0 0 0.5px rgba(0,0,0,0.06);
+  animation: langPop 0.16s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+  transform-origin: top right;
+}
+@keyframes langPop { from { opacity: 0; transform: scale(0.94); } to { opacity: 1; transform: none; } }
+.lang-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 11px 12px;
+  border: none;
+  border-radius: 11px;
+  background: none;
+  color: var(--text);
+  font-family: 'Nunito', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+.lang-item .flag { width: 27px; height: 18px; }
+.lang-item .lang-name { flex: 1; }
+.lang-check { color: var(--accent); font-weight: 800; visibility: hidden; }
+.lang-item.on { background: rgba(255,59,48,0.08); color: var(--accent); font-weight: 800; }
+.lang-item.on .lang-check { visibility: visible; }
+@media (hover: hover) {
+  .lang-item:not(.on):hover { background: var(--bg); }
+  .lang-btn:hover { filter: brightness(0.98); }
+}
+
+/* ── Перегляд бланка ── */
+.pv-open { overflow: hidden; }
+.preview {
+  position: fixed;
+  inset: 0;
+  z-index: 450;
+  background: #d9d9de;
+  display: flex;
+  flex-direction: column;
+}
+.pv-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: calc(8px + env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) 8px max(12px, env(safe-area-inset-left));
+  background: rgba(255,255,255,0.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 0.5px 0 rgba(0,0,0,0.12);
+  flex-shrink: 0;
+}
+.pv-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 14px;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.pv-back { background: var(--bg); color: var(--blue); padding-left: 10px; }
+.pv-arrow { font-size: 24px; line-height: 16px; margin-top: -3px; }
+.pv-print {
+  background: linear-gradient(145deg, #ff3b30 0%, #c0392b 100%);
+  color: #fff;
+  box-shadow: 0 3px 12px rgba(255,59,48,0.35);
+}
+.pv-zoom { display: flex; align-items: center; gap: 2px; background: var(--bg); border-radius: 12px; padding: 3px; }
+.pv-zoom span { min-width: 46px; text-align: center; font-size: 13px; font-weight: 800; color: var(--text2); }
+.pv-z {
+  width: 34px;
+  height: 32px;
+  border: none;
+  border-radius: 9px;
+  background: var(--card);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  cursor: pointer;
+}
+.pv-scroll {
+  flex: 1;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x pan-y;
+  padding: 12px 12px calc(24px + env(safe-area-inset-bottom));
+}
+.pv-page {
+  position: relative;
+  margin: 0 auto;
+  background: #fff;
+  box-shadow: 0 6px 30px rgba(0,0,0,0.18);
+  overflow: hidden;
+}
+.pv-page iframe {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1123px;
+  height: 794px;
+  border: 0;
+  transform-origin: 0 0;
+  pointer-events: none;
+  background: #fff;
+}
+#printHost { display: none; }
+@media screen and (max-width: 380px) {
+  .pv-btn { padding: 9px 10px; font-size: 14px; }
+  .pv-zoom span { min-width: 40px; }
+  .pv-z { width: 30px; }
+}
+@media screen and (min-width: 1024px) {
+  .preview { left: 0; }
+}
 
 .logo-card { padding: 14px 16px; }
 .logo-preview {
@@ -1200,7 +1343,7 @@ onAuthStateChanged(auth, async user => {
 <!-- ВХІД -->
 <div class="auth" id="authScreen">
   <div class="auth-box">
-    <div class="lang-pick"><span>🌐</span><select class="lang-sel" onchange="setLang(this.value)" aria-label="Language"></select></div>
+    <div class="lang-pick"><button type="button" class="lang-btn" onclick="openLangMenu(this)" aria-label="Language"></button></div>
     <img class="auth-logo" id="authLogo" alt="Е-Монтаж">
     <div class="auth-title" data-t="Заміри дверей, підлоги і плінтуса">Заміри дверей, підлоги і плінтуса</div>
     <div class="auth-loading" id="authLoading" data-t="Завантаження…">Завантаження…</div>
@@ -1237,7 +1380,7 @@ onAuthStateChanged(auth, async user => {
 <!-- ДОСТУП ЗАКІНЧИВСЯ -->
 <div class="auth" id="lockScreen" hidden>
   <div class="auth-box">
-    <div class="lang-pick"><span>🌐</span><select class="lang-sel" onchange="setLang(this.value)" aria-label="Language"></select></div>
+    <div class="lang-pick"><button type="button" class="lang-btn" onclick="openLangMenu(this)" aria-label="Language"></button></div>
     <img class="auth-logo" id="lockLogo" alt="Е-Монтаж">
     <div class="auth-title" data-t="Пробний період закінчився">Пробний період закінчився</div>
     <div class="lock-msg">
@@ -1424,6 +1567,23 @@ onAuthStateChanged(auth, async user => {
   </div>
 </div>
 
+<!-- ПЕРЕГЛЯД БЛАНКА -->
+<div class="preview" id="preview" hidden>
+  <div class="pv-bar">
+    <button type="button" class="pv-btn pv-back" onclick="closePreview()"><span class="pv-arrow">‹</span><span data-t="Назад">Назад</span></button>
+    <div class="pv-zoom">
+      <button type="button" class="pv-z" onclick="zoomPreview(-1)" aria-label="−">−</button>
+      <span id="pvZoom">100%</span>
+      <button type="button" class="pv-z" onclick="zoomPreview(1)" aria-label="+">+</button>
+    </div>
+    <button type="button" class="pv-btn pv-print" onclick="printPreview()"><span>🖨️</span><span data-t="Друк">Друк</span></button>
+  </div>
+  <div class="pv-scroll" id="pvScroll">
+    <div class="pv-page" id="pvPage"><iframe id="pvFrame" title="preview" tabindex="-1"></iframe></div>
+  </div>
+</div>
+<div id="printHost"></div>
+
 <!-- PRINT DOC -->
 <div class="print-doc" id="printable">
   <img class="print-logo" alt="">
@@ -1495,7 +1655,7 @@ onAuthStateChanged(auth, async user => {
 <script>
 /* ───── МОВИ ───── */
 var LANGS = { uk: 'Українська', en: 'English', pl: 'Polski', ru: 'Русский', es: 'Español' };
-var I18N = {"⚠️ Пам'ять заповнена: видаліть зайві фото":{"en":"⚠️ Storage is full: delete some photos","pl":"⚠️ Pamięć pełna: usuń zbędne zdjęcia","ru":"⚠️ Память заполнена: удалите лишние фото","es":"⚠️ Memoria llena: elimine fotos innecesarias"},"Оберіть":{"en":"Select","pl":"Wybierz","ru":"Выберите","es":"Elegir"},"Інший…":{"en":"Other…","pl":"Inny…","ru":"Другой…","es":"Otro…"}," м²":{"en":" m²","pl":" m²","ru":" м²","es":" m²"}," м":{"en":" m","pl":" m","ru":" м","es":" m"},"м":{"en":"m","pl":"m","ru":"м","es":"m"},"Примітка":{"en":"Note","pl":"Uwagi","ru":"Примечание","es":"Nota"},"Що врахувати...":{"en":"What to consider...","pl":"Co uwzględnić...","ru":"Что учесть...","es":"Qué tener en cuenta..."},"🪵 Підлога №":{"en":"🪵 Floor #","pl":"🪵 Podłoga nr ","ru":"🪵 Пол №","es":"🪵 Suelo n.º "},"Довжина":{"en":"Length","pl":"Długość","ru":"Длина","es":"Largo"},"Ширина":{"en":"Width","pl":"Szerokość","ru":"Ширина","es":"Ancho"},"Площа":{"en":"Area","pl":"Powierzchnia","ru":"Площадь","es":"Superficie"},"Покриття":{"en":"Flooring","pl":"Wykładzina","ru":"Покрытие","es":"Revestimiento"},"Основа":{"en":"Subfloor","pl":"Podłoże","ru":"Основание","es":"Base"},"Вирівнювання":{"en":"Levelling","pl":"Wyrównanie","ru":"Выравнивание","es":"Nivelación"},"Демонтаж старої підлоги":{"en":"Remove old floor","pl":"Demontaż starej podłogi","ru":"Демонтаж старого пола","es":"Retirar suelo antiguo"},"Фото підлоги":{"en":"Floor photos","pl":"Zdjęcia podłogi","ru":"Фото пола","es":"Fotos del suelo"},"📏 Плінтус №":{"en":"📏 Skirting #","pl":"📏 Listwa nr ","ru":"📏 Плинтус №","es":"📏 Rodapié n.º "},"Периметр стін":{"en":"Wall perimeter","pl":"Obwód ścian","ru":"Периметр стен","es":"Perímetro de paredes"},"Дверні прорізи":{"en":"Door openings","pl":"Otwory drzwiowe","ru":"Дверные проёмы","es":"Huecos de puertas"},"Плінтуса потрібно":{"en":"Skirting needed","pl":"Potrzeba listew","ru":"Нужно плинтуса","es":"Rodapié necesario"},"Матеріал":{"en":"Material","pl":"Materiał","ru":"Материал","es":"Material"},"Висота плінтуса":{"en":"Skirting height","pl":"Wysokość listwy","ru":"Высота плинтуса","es":"Altura del rodapié"},"мм":{"en":"mm","pl":"mm","ru":"мм","es":"mm"},"Внутрішні кути":{"en":"Inner corners","pl":"Narożniki wewnętrzne","ru":"Внутренние углы","es":"Esquinas interiores"},"шт":{"en":"pcs","pl":"szt.","ru":"шт","es":"uds."},"Зовнішні кути":{"en":"Outer corners","pl":"Narożniki zewnętrzne","ru":"Внешние углы","es":"Esquinas exteriores"},"Демонтаж старого":{"en":"Remove old","pl":"Demontaż starych","ru":"Демонтаж старого","es":"Retirar el antiguo"},"Фото стін":{"en":"Wall photos","pl":"Zdjęcia ścian","ru":"Фото стен","es":"Fotos de paredes"},"📷 Фото додано":{"en":"📷 Photo added","pl":"📷 Dodano zdjęcie","ru":"📷 Фото добавлено","es":"📷 Foto añadida"},"🚪 Двері №":{"en":"🚪 Door #","pl":"🚪 Drzwi nr ","ru":"🚪 Дверь №","es":"🚪 Puerta n.º "}," (подвійні)":{"en":" (double)","pl":" (dwuskrzydłowe)","ru":" (двойная)","es":" (doble)"},"Тип дверей":{"en":"Door type","pl":"Rodzaj drzwi","ru":"Тип двери","es":"Tipo de puerta"},"Одинарні":{"en":"Single","pl":"Jednoskrzydłowe","ru":"Одинарная","es":"Simple"},"Подвійні":{"en":"Double","pl":"Dwuskrzydłowe","ru":"Двойная","es":"Doble"},"Висота проєму":{"en":"Opening height","pl":"Wysokość otworu","ru":"Высота проёма","es":"Alto del hueco"},"Ширина проєму":{"en":"Opening width","pl":"Szerokość otworu","ru":"Ширина проёма","es":"Ancho del hueco"},"Товщ. стіни":{"en":"Wall thickness","pl":"Grubość ściany","ru":"Толщ. стены","es":"Grosor del muro"},"Матеріал стіни":{"en":"Wall material","pl":"Materiał ściany","ru":"Материал стены","es":"Material del muro"},"Підгот. проєм":{"en":"Opening prep","pl":"Przygotowanie otworu","ru":"Подгот. проёма","es":"Prep. del hueco"},"Полотно ширина 1 (активна стулка)":{"en":"Leaf width 1 (active leaf)","pl":"Szer. skrzydła 1 (czynne)","ru":"Ширина полотна 1 (активная створка)","es":"Ancho hoja 1 (activa)"},"Полотно ширина":{"en":"Leaf width","pl":"Szerokość skrzydła","ru":"Ширина полотна","es":"Ancho de la hoja"},"Полотно ширина 2 (пасивна стулка)":{"en":"Leaf width 2 (passive leaf)","pl":"Szer. skrzydła 2 (bierne)","ru":"Ширина полотна 2 (пассивная створка)","es":"Ancho hoja 2 (pasiva)"},"Полотно висота":{"en":"Leaf height","pl":"Wysokość skrzydła","ru":"Высота полотна","es":"Alto de la hoja"},"Полотно шир. 1":{"en":"Leaf width 1","pl":"Szer. skrzydła 1","ru":"Шир. полотна 1","es":"Ancho hoja 1"},"Полотно шир. 2":{"en":"Leaf width 2","pl":"Szer. skrzydła 2","ru":"Шир. полотна 2","es":"Ancho hoja 2"},"Лиштва":{"en":"Casing","pl":"Opaska","ru":"Наличник","es":"Tapajuntas"},"1 к-кт":{"en":"1 set","pl":"1 kpl.","ru":"1 к-т","es":"1 juego"},"2 к-кт":{"en":"2 sets","pl":"2 kpl.","ru":"2 к-та","es":"2 juegos"},"Відкриття (активна стулка)":{"en":"Opening side (active leaf)","pl":"Otwieranie (skrzydło czynne)","ru":"Открывание (активная створка)","es":"Apertura (hoja activa)"},"Відкриття":{"en":"Opening side","pl":"Otwieranie","ru":"Открывание","es":"Apertura"},"Праве":{"en":"Right","pl":"Prawe","ru":"Правое","es":"Derecha"},"Ліве":{"en":"Left","pl":"Lewe","ru":"Левое","es":"Izquierda"},"Напрямок":{"en":"Swing","pl":"Kierunek","ru":"Направление","es":"Sentido"},"Всередину":{"en":"Inward","pl":"Do wewnątrz","ru":"Внутрь","es":"Hacia dentro"},"Назовні":{"en":"Outward","pl":"Na zewnątrz","ru":"Наружу","es":"Hacia fuera"},"Так":{"en":"Yes","pl":"Tak","ru":"Да","es":"Sí"},"Ні":{"en":"No","pl":"Nie","ru":"Нет","es":"No"},"Замок":{"en":"Lock","pl":"Zamek","ru":"Замок","es":"Cerradura"},"Підлога":{"en":"Floor","pl":"Podłoga","ru":"Пол","es":"Suelo"},"Ремонт":{"en":"Renovation","pl":"Remont","ru":"Ремонт","es":"Reforma"},"Демонтаж":{"en":"Removal","pl":"Demontaż","ru":"Демонтаж","es":"Desmontaje"},"Фото проєму":{"en":"Opening photos","pl":"Zdjęcia otworu","ru":"Фото проёма","es":"Fotos del hueco"},"Фото":{"en":"Photo","pl":"Zdjęcie","ru":"Фото","es":"Foto"},"Інше…":{"en":"Other…","pl":"Inne…","ru":"Другое…","es":"Otra…"},"Кімната":{"en":"Room","pl":"Pomieszczenie","ru":"Комната","es":"Estancia"},"Назва кімнати":{"en":"Room name","pl":"Nazwa pomieszczenia","ru":"Название комнаты","es":"Nombre de la estancia"},"Ввести вручну":{"en":"Type manually","pl":"Wpisz ręcznie","ru":"Ввести вручную","es":"Escribir a mano"},"Стіна: ":{"en":"Wall: ","pl":"Ściana: ","ru":"Стена: ","es":"Muro: "},"ліфт: ":{"en":"lift: ","pl":"winda: ","ru":"лифт: ","es":"ascensor: "},"Подв.":{"en":"Dbl.","pl":"Dwuskrz.","ru":"Двойн.","es":"Doble"},"Один.":{"en":"Sgl.","pl":"Jednoskrz.","ru":"Один.","es":"Simple"},"Двері":{"en":"Doors","pl":"Drzwi","ru":"Двери","es":"Puertas"},"Плінтус":{"en":"Skirting","pl":"Listwy","ru":"Плинтус","es":"Rodapié"},"Фото:":{"en":"Photos:","pl":"Zdjęcia:","ru":"Фото:","es":"Fotos:"},"Разом, м²:":{"en":"Total, m²:","pl":"Razem, m²:","ru":"Итого, м²:","es":"Total, m²:"},"Довжина, м":{"en":"Length, m","pl":"Długość, m","ru":"Длина, м","es":"Largo, m"},"Ширина, м":{"en":"Width, m","pl":"Szerokość, m","ru":"Ширина, м","es":"Ancho, m"},"Площа, м²":{"en":"Area, m²","pl":"Pow., m²","ru":"Площадь, м²","es":"Sup., m²"},"Вирівн.":{"en":"Level.","pl":"Wyrówn.","ru":"Выравн.","es":"Nivel."},"Демонт.":{"en":"Remov.","pl":"Demont.","ru":"Демонт.","es":"Desm."},"Разом, м:":{"en":"Total, m:","pl":"Razem, m:","ru":"Итого, м:","es":"Total, m:"},"Периметр, м":{"en":"Perimeter, m","pl":"Obwód, m","ru":"Периметр, м","es":"Perímetro, m"},"Прорізи, м":{"en":"Openings, m","pl":"Otwory, m","ru":"Проёмы, м","es":"Huecos, m"},"Плінтуса, м":{"en":"Skirting, m","pl":"Listwy, m","ru":"Плинтуса, м","es":"Rodapié, m"},"Висота, мм":{"en":"Height, mm","pl":"Wysokość, mm","ru":"Высота, мм","es":"Alto, mm"},"Внутр. кути":{"en":"Inner corners","pl":"Narożn. wewn.","ru":"Внутр. углы","es":"Esq. int."},"Зовн. кути":{"en":"Outer corners","pl":"Narożn. zewn.","ru":"Внешн. углы","es":"Esq. ext."},"Бланк замірів":{"en":"Measurement form","pl":"Karta pomiarów","ru":"Бланк замеров","es":"Hoja de mediciones"},"⚠️ Дозвольте спливаючі вікна":{"en":"⚠️ Allow pop-up windows","pl":"⚠️ Zezwól na wyskakujące okna","ru":"⚠️ Разрешите всплывающие окна","es":"⚠️ Permita las ventanas emergentes"},"📋 БЛАНК ЗАМІРІВ\n":{"en":"📋 MEASUREMENT FORM\n","pl":"📋 KARTA POMIARÓW\n","ru":"📋 БЛАНК ЗАМЕРОВ\n","es":"📋 HOJA DE MEDICIONES\n"},"📅 Дата: ":{"en":"📅 Date: ","pl":"📅 Data: ","ru":"📅 Дата: ","es":"📅 Fecha: "},"🏪 Магазин: ":{"en":"🏪 Store: ","pl":"🏪 Sklep: ","ru":"🏪 Магазин: ","es":"🏪 Tienda: "},"📍 Адреса магазину: ":{"en":"📍 Store address: ","pl":"📍 Adres sklepu: ","ru":"📍 Адрес магазина: ","es":"📍 Dirección de la tienda: "},"👤 Менеджер: ":{"en":"👤 Manager: ","pl":"👤 Doradca: ","ru":"👤 Менеджер: ","es":"👤 Comercial: "},"━━━ ЗАМОВНИК ━━━\n":{"en":"━━━ CUSTOMER ━━━\n","pl":"━━━ KLIENT ━━━\n","ru":"━━━ ЗАКАЗЧИК ━━━\n","es":"━━━ CLIENTE ━━━\n"},"👤 Ім'я: ":{"en":"👤 Name: ","pl":"👤 Imię i nazwisko: ","ru":"👤 Имя: ","es":"👤 Nombre: "},"📞 Телефон: ":{"en":"📞 Phone: ","pl":"📞 Telefon: ","ru":"📞 Телефон: ","es":"📞 Teléfono: "},"📍 Адреса монтажу: ":{"en":"📍 Installation address: ","pl":"📍 Adres montażu: ","ru":"📍 Адрес монтажа: ","es":"📍 Dirección de instalación: "},"🚪 Товар ТМ: ":{"en":"🚪 Product brand: ","pl":"🚪 Marka produktu: ","ru":"🚪 Товар ТМ: ","es":"🚪 Marca del producto: "},"🏢 Поверх: ":{"en":"🏢 Floor: ","pl":"🏢 Piętro: ","ru":"🏢 Этаж: ","es":"🏢 Planta: "},"🛗 Ліфт: ":{"en":"🛗 Lift: ","pl":"🛗 Winda: ","ru":"🛗 Лифт: ","es":"🛗 Ascensor: "},"📅 Бажана дата монтажу: ":{"en":"📅 Preferred installation date: ","pl":"📅 Preferowana data montażu: ","ru":"📅 Желаемая дата монтажа: ","es":"📅 Fecha de instalación deseada: "},"━━━ ДВЕРІ (":{"en":"━━━ DOORS (","pl":"━━━ DRZWI (","ru":"━━━ ДВЕРИ (","es":"━━━ PUERTAS ("}," шт) ━━━\n":{"en":" pcs) ━━━\n","pl":" szt.) ━━━\n","ru":" шт) ━━━\n","es":" uds.) ━━━\n"},"\n🚪 Двері №":{"en":"\n🚪 Door #","pl":"\n🚪 Drzwi nr ","ru":"\n🚪 Дверь №","es":"\n🚪 Puerta n.º "},"   Проєм: ":{"en":"   Opening: ","pl":"   Otwór: ","ru":"   Проём: ","es":"   Hueco: "}," мм\n":{"en":" mm\n","pl":" mm\n","ru":" мм\n","es":" mm\n"},"   Товщина стіни: ":{"en":"   Wall thickness: ","pl":"   Grubość ściany: ","ru":"   Толщина стены: ","es":"   Grosor del muro: "},"   Підготовка проєму: ":{"en":"   Opening prep: ","pl":"   Przygotowanie otworu: ","ru":"   Подготовка проёма: ","es":"   Preparación del hueco: "},"   Полотно: ":{"en":"   Leaf: ","pl":"   Skrzydło: ","ru":"   Полотно: ","es":"   Hoja: "},"   Лиштва: ":{"en":"   Casing: ","pl":"   Opaska: ","ru":"   Наличник: ","es":"   Tapajuntas: "},"   Відкриття: ":{"en":"   Opening side: ","pl":"   Otwieranie: ","ru":"   Открывание: ","es":"   Apertura: "},"   Напрямок: ":{"en":"   Swing: ","pl":"   Kierunek: ","ru":"   Направление: ","es":"   Sentido: "},"   Замок: ":{"en":"   Lock: ","pl":"   Zamek: ","ru":"   Замок: ","es":"   Cerradura: "},"   Роботи: ":{"en":"   Works: ","pl":"   Prace: ","ru":"   Работы: ","es":"   Trabajos: "},"\n━━━ ПІДЛОГА ━━━\n":{"en":"\n━━━ FLOOR ━━━\n","pl":"\n━━━ PODŁOGA ━━━\n","ru":"\n━━━ ПОЛ ━━━\n","es":"\n━━━ SUELO ━━━\n"}," м = ":{"en":" m = ","pl":" m = ","ru":" м = ","es":" m = "}," м²\n":{"en":" m²\n","pl":" m²\n","ru":" м²\n","es":" m²\n"},"   Покриття: ":{"en":"   Flooring: ","pl":"   Wykładzina: ","ru":"   Покрытие: ","es":"   Revestimiento: "},"   Основа: ":{"en":"   Subfloor: ","pl":"   Podłoże: ","ru":"   Основание: ","es":"   Base: "},"   Вирівнювання\n":{"en":"   Levelling\n","pl":"   Wyrównanie\n","ru":"   Выравнивание\n","es":"   Nivelación\n"},"   Демонтаж старої підлоги\n":{"en":"   Remove old floor\n","pl":"   Demontaż starej podłogi\n","ru":"   Демонтаж старого пола\n","es":"   Retirar suelo antiguo\n"},"\nРазом: ":{"en":"\nTotal: ","pl":"\nRazem: ","ru":"\nИтого: ","es":"\nTotal: "},"\n━━━ ПЛІНТУС ━━━\n":{"en":"\n━━━ SKIRTING ━━━\n","pl":"\n━━━ LISTWY ━━━\n","ru":"\n━━━ ПЛИНТУС ━━━\n","es":"\n━━━ RODAPIÉ ━━━\n"},"   Плінтуса: ":{"en":"   Skirting: ","pl":"   Listwy: ","ru":"   Плинтуса: ","es":"   Rodapié: "}," м (периметр ":{"en":" m (perimeter ","pl":" m (obwód ","ru":" м (периметр ","es":" m (perímetro "},", прорізи ":{"en":", openings ","pl":", otwory ","ru":", проёмы ","es":", huecos "},"   Матеріал: ":{"en":"   Material: ","pl":"   Materiał: ","ru":"   Материал: ","es":"   Material: "},"   Висота: ":{"en":"   Height: ","pl":"   Wysokość: ","ru":"   Высота: ","es":"   Alto: "},"   Внутрішні кути: ":{"en":"   Inner corners: ","pl":"   Narożniki wewnętrzne: ","ru":"   Внутренние углы: ","es":"   Esquinas interiores: "},"   Зовнішні кути: ":{"en":"   Outer corners: ","pl":"   Narożniki zewnętrzne: ","ru":"   Внешние углы: ","es":"   Esquinas exteriores: "},"   Демонтаж старого\n":{"en":"   Remove old\n","pl":"   Demontaż starych\n","ru":"   Демонтаж старого\n","es":"   Retirar el antiguo\n"}," м\n":{"en":" m\n","pl":" m\n","ru":" м\n","es":" m\n"},"\n📝 Нотатки: ":{"en":"\n📝 Notes: ","pl":"\n📝 Notatki: ","ru":"\n📝 Заметки: ","es":"\n📝 Notas: "},"✅ Скопійовано":{"en":"✅ Copied","pl":"✅ Skopiowano","ru":"✅ Скопировано","es":"✅ Copiado"},"Невірний email або пароль":{"en":"Wrong email or password","pl":"Nieprawidłowy e-mail lub hasło","ru":"Неверный email или пароль","es":"Email o contraseña incorrectos"},"Невірний пароль":{"en":"Wrong password","pl":"Nieprawidłowe hasło","ru":"Неверный пароль","es":"Contraseña incorrecta"},"Акаунт з таким email не знайдено":{"en":"No account with this email","pl":"Nie znaleziono konta z tym e-mailem","ru":"Аккаунт с таким email не найден","es":"No hay ninguna cuenta con este email"},"Перевірте email":{"en":"Check the email","pl":"Sprawdź e-mail","ru":"Проверьте email","es":"Revise el email"},"Введіть email":{"en":"Enter your email","pl":"Wpisz e-mail","ru":"Введите email","es":"Introduzca su email"},"Введіть пароль":{"en":"Enter your password","pl":"Wpisz hasło","ru":"Введите пароль","es":"Introduzca la contraseña"},"Цей email уже зареєстровано. Увійдіть":{"en":"This email is already registered. Please sign in","pl":"Ten e-mail jest już zarejestrowany. Zaloguj się","ru":"Этот email уже зарегистрирован. Войдите","es":"Este email ya está registrado. Inicie sesión"},"Пароль має бути не менше 6 символів":{"en":"Password must be at least 6 characters","pl":"Hasło musi mieć co najmniej 6 znaków","ru":"Пароль должен быть не короче 6 символов","es":"La contraseña debe tener al menos 6 caracteres"},"Забагато спроб. Спробуйте пізніше":{"en":"Too many attempts. Try again later","pl":"Zbyt wiele prób. Spróbuj później","ru":"Слишком много попыток. Попробуйте позже","es":"Demasiados intentos. Inténtelo más tarde"},"Немає інтернету":{"en":"No internet connection","pl":"Brak internetu","ru":"Нет интернета","es":"Sin conexión a internet"},"Увійдіть ще раз і повторіть":{"en":"Sign in again and retry","pl":"Zaloguj się ponownie i powtórz","ru":"Войдите ещё раз и повторите","es":"Inicie sesión de nuevo y repita"},"Немає доступу. Перевірте тариф":{"en":"No access. Check your plan","pl":"Brak dostępu. Sprawdź plan","ru":"Нет доступа. Проверьте тариф","es":"Sin acceso. Revise su plan"},"Бланк не знайдено":{"en":"Form not found","pl":"Nie znaleziono karty","ru":"Бланк не найден","es":"Hoja no encontrada"},"Помилка: ":{"en":"Error: ","pl":"Błąd: ","ru":"Ошибка: ","es":"Error: "},"невідома":{"en":"unknown","pl":"nieznany","ru":"неизвестная","es":"desconocido"},"Зареєструватися":{"en":"Sign up","pl":"Zarejestruj się","ru":"Зарегистрироваться","es":"Registrarse"},"Увійти":{"en":"Sign in","pl":"Zaloguj się","ru":"Войти","es":"Entrar"},"Після реєстрації — 14 днів безкоштовно, без оплати і карток.":{"en":"14 days free after sign-up, no payment or card needed.","pl":"Po rejestracji 14 dni za darmo, bez płatności i karty.","ru":"После регистрации — 14 дней бесплатно, без оплаты и карт.","es":"14 días gratis tras registrarse, sin pago ni tarjeta."},"Немає з'єднання. Перевірте інтернет і оновіть сторінку":{"en":"No connection. Check the internet and reload the page","pl":"Brak połączenia. Sprawdź internet i odśwież stronę","ru":"Нет соединения. Проверьте интернет и обновите страницу","es":"Sin conexión. Revise internet y recargue la página"},"Вкажіть назву компанії":{"en":"Enter the company name","pl":"Podaj nazwę firmy","ru":"Укажите название компании","es":"Indique el nombre de la empresa"},"Введіть email, і ми надішлемо посилання":{"en":"Enter your email and we will send a link","pl":"Wpisz e-mail, a wyślemy link","ru":"Введите email, и мы отправим ссылку","es":"Introduzca su email y le enviaremos un enlace"},"📧 Посилання надіслано на ":{"en":"📧 Link sent to ","pl":"📧 Link wysłano na ","ru":"📧 Ссылка отправлена на ","es":"📧 Enlace enviado a "},"База ще не налаштована: опублікуйте правила Firestore":{"en":"Database not set up yet: publish the Firestore rules","pl":"Baza nie jest skonfigurowana: opublikuj reguły Firestore","ru":"База ещё не настроена: опубликуйте правила Firestore","es":"La base de datos no está configurada: publique las reglas de Firestore"},"Пробний період: ":{"en":"Trial: ","pl":"Okres próbny: ","ru":"Пробный период: ","es":"Prueba: "}," дн.":{"en":" days","pl":" dni","ru":" дн.","es":" días"},"Пробний період закінчився":{"en":"Trial period has ended","pl":"Okres próbny dobiegł końca","ru":"Пробный период закончился","es":"El periodo de prueba ha terminado"},"✅ Доступ відкрито":{"en":"✅ Access granted","pl":"✅ Dostęp przyznany","ru":"✅ Доступ открыт","es":"✅ Acceso concedido"},"Доступ ще не відкрито":{"en":"Access not granted yet","pl":"Dostęp nie został jeszcze przyznany","ru":"Доступ ещё не открыт","es":"El acceso aún no está concedido"},"Закрити":{"en":"Close","pl":"Zamknij","ru":"Закрыть","es":"Cerrar"},"Скасувати":{"en":"Cancel","pl":"Anuluj","ru":"Отмена","es":"Cancelar"}," · ще ":{"en":" · ","pl":" · jeszcze ","ru":" · ещё ","es":" · quedan "}," · закінчився":{"en":" · ended","pl":" · zakończony","ru":" · закончился","es":" · terminado"},"Компанія":{"en":"Company","pl":"Firma","ru":"Компания","es":"Empresa"},"Назва компанії":{"en":"Company name","pl":"Nazwa firmy","ru":"Название компании","es":"Nombre de la empresa"},"Мова":{"en":"Language","pl":"Język","ru":"Язык","es":"Idioma"},"Тариф":{"en":"Plan","pl":"Plan","ru":"Тариф","es":"Plan"},"Менеджери — по одному в рядку":{"en":"Managers — one per line","pl":"Doradcy — po jednym w wierszu","ru":"Менеджеры — по одному в строке","es":"Comerciales — uno por línea"},"Іван&#10;Олена":{"en":"John&#10;Anna","pl":"Jan&#10;Anna","ru":"Иван&#10;Елена","es":"Juan&#10;Ana"},"📂 Архів бланків":{"en":"📂 Forms archive","pl":"📂 Archiwum kart","ru":"📂 Архив бланков","es":"📂 Archivo de hojas"},"📄 Новий бланк":{"en":"📄 New form","pl":"📄 Nowa karta","ru":"📄 Новый бланк","es":"📄 Nueva hoja"},"🛠 Адмін-панель":{"en":"🛠 Admin panel","pl":"🛠 Panel administratora","ru":"🛠 Админ-панель","es":"🛠 Panel de administración"},"Вийти з акаунта":{"en":"Sign out","pl":"Wyloguj się","ru":"Выйти из аккаунта","es":"Cerrar sesión"},"Політика конфіденційності":{"en":"Privacy policy","pl":"Polityka prywatności","ru":"Политика конфиденциальности","es":"Política de privacidad"},"Видалити акаунт":{"en":"Delete account","pl":"Usuń konto","ru":"Удалить аккаунт","es":"Eliminar cuenta"},"Профіль":{"en":"Profile","pl":"Profil","ru":"Профиль","es":"Perfil"},"✅ Збережено":{"en":"✅ Saved","pl":"✅ Zapisano","ru":"✅ Сохранено","es":"✅ Guardado"},"✅ Менеджерів збережено":{"en":"✅ Managers saved","pl":"✅ Zapisano doradców","ru":"✅ Менеджеры сохранены","es":"✅ Comerciales guardados"},"Почати новий бланк?":{"en":"Start a new form?","pl":"Zacząć nową kartę?","ru":"Начать новый бланк?","es":"¿Empezar una hoja nueva?"},"Поточний бланк буде очищено. Якщо він потрібен — спершу збережіть його в хмару. Магазин і менеджер залишаться.":{"en":"The current form will be cleared. If you need it, save it to the cloud first. Store and manager will stay.","pl":"Bieżąca karta zostanie wyczyszczona. Jeśli jest potrzebna, najpierw zapisz ją w chmurze. Sklep i doradca pozostaną.","ru":"Текущий бланк будет очищен. Если он нужен — сначала сохраните его в облако. Магазин и менеджер останутся.","es":"La hoja actual se vaciará. Si la necesita, guárdela antes en la nube. La tienda y el comercial se mantendrán."},"Почати":{"en":"Start","pl":"Zacznij","ru":"Начать","es":"Empezar"},"Архів бланків":{"en":"Forms archive","pl":"Archiwum kart","ru":"Архив бланков","es":"Archivo de hojas"},"Завантаження…":{"en":"Loading…","pl":"Ładowanie…","ru":"Загрузка…","es":"Cargando…"},"Пошук: ім'я, адреса, телефон":{"en":"Search: name, address, phone","pl":"Szukaj: imię, adres, telefon","ru":"Поиск: имя, адрес, телефон","es":"Buscar: nombre, dirección, teléfono"},"дверей ":{"en":"doors ","pl":"drzwi ","ru":"дверей ","es":"puertas "},"підлога ":{"en":"floor ","pl":"podłoga ","ru":"пол ","es":"suelo "},"плінтус ":{"en":"skirting ","pl":"listwy ","ru":"плинтус ","es":"rodapié "},"Без імені":{"en":"No name","pl":"Bez nazwy","ru":"Без имени","es":"Sin nombre"},"відкритий":{"en":"open","pl":"otwarta","ru":"открыт","es":"abierta"},"Видалити":{"en":"Delete","pl":"Usuń","ru":"Удалить","es":"Eliminar"},"Нічого не знайдено":{"en":"Nothing found","pl":"Nic nie znaleziono","ru":"Ничего не найдено","es":"No se encontró nada"},"Ще немає збережених бланків. Натисніть «Хмара», щоб зберегти поточний.":{"en":"No saved forms yet. Tap “Cloud” to save the current one.","pl":"Brak zapisanych kart. Naciśnij „Chmura”, aby zapisać bieżącą.","ru":"Ещё нет сохранённых бланков. Нажмите «Облако», чтобы сохранить текущий.","es":"Aún no hay hojas guardadas. Pulse «Nube» para guardar la actual."},"Відкриваю…":{"en":"Opening…","pl":"Otwieram…","ru":"Открываю…","es":"Abriendo…"},"📂 Бланк відкрито":{"en":"📂 Form opened","pl":"📂 Karta otwarta","ru":"📂 Бланк открыт","es":"📂 Hoja abierta"},"Видалити бланк?":{"en":"Delete form?","pl":"Usunąć kartę?","ru":"Удалить бланк?","es":"¿Eliminar la hoja?"},". Відновити його не можна.":{"en":". It cannot be restored.","pl":". Nie można jej przywrócić.","ru":". Восстановить его нельзя.","es":". No se podrá recuperar."},"🗑 Бланк видалено":{"en":"🗑 Form deleted","pl":"🗑 Karta usunięta","ru":"🗑 Бланк удалён","es":"🗑 Hoja eliminada"},"Адмін-панель":{"en":"Admin panel","pl":"Panel administratora","ru":"Админ-панель","es":"Panel de administración"},"Пошук: компанія або email":{"en":"Search: company or email","pl":"Szukaj: firma lub e-mail","ru":"Поиск: компания или email","es":"Buscar: empresa o email"},"Усього: ":{"en":"Total: ","pl":"Razem: ","ru":"Всего: ","es":"Total: "}," · Клієнтів: ":{"en":" · Clients: ","pl":" · Klientów: ","ru":" · Клиентов: ","es":" · Clientes: "}," · Безкоштовно: ":{"en":" · Free: ","pl":" · Bezpłatnie: ","ru":" · Бесплатно: ","es":" · Gratis: "}," (закінчився: ":{"en":" (ended: ","pl":" (zakończony: ","ru":" (закончился: ","es":" (terminado: "}," · Адмінів: ":{"en":" · Admins: ","pl":" · Administratorów: ","ru":" · Админов: ","es":" · Administradores: "},"до ":{"en":"until ","pl":"do ","ru":"до ","es":"hasta "},"закінчився ":{"en":"ended ","pl":"zakończony ","ru":"закончился ","es":"terminó el "},"+14 дн.":{"en":"+14 days","pl":"+14 dni","ru":"+14 дн.","es":"+14 días"},"ви":{"en":"you","pl":"ty","ru":"вы","es":"usted"}," · з ":{"en":" · since ","pl":" · od ","ru":" · с ","es":" · desde "},"Нікого не знайдено":{"en":"No one found","pl":"Nikogo nie znaleziono","ru":"Никого не найдено","es":"No se encontró a nadie"},"✅ Пробний період до ":{"en":"✅ Trial until ","pl":"✅ Okres próbny do ","ru":"✅ Пробный период до ","es":"✅ Prueba hasta el "},"Видалити акаунт?":{"en":"Delete account?","pl":"Usunąć konto?","ru":"Удалить аккаунт?","es":"¿Eliminar la cuenta?"},"Буде видалено акаунт ":{"en":"This will delete the account ","pl":"Zostanie usunięte konto ","ru":"Будет удалён аккаунт ","es":"Se eliminará la cuenta "}," і всі збережені бланки з фото. Відновити їх не можна.":{"en":" and all saved forms with photos. They cannot be restored.","pl":" oraz wszystkie zapisane karty ze zdjęciami. Nie można ich przywrócić.","ru":" и все сохранённые бланки с фото. Восстановить их нельзя.","es":" y todas las hojas guardadas con fotos. No se podrán recuperar."},"Пароль":{"en":"Password","pl":"Hasło","ru":"Пароль","es":"Contraseña"},"Для підтвердження":{"en":"To confirm","pl":"Aby potwierdzić","ru":"Для подтверждения","es":"Para confirmar"},"Видалити назавжди":{"en":"Delete forever","pl":"Usuń na zawsze","ru":"Удалить навсегда","es":"Eliminar para siempre"},"⚠️ Немає з'єднання з хмарою":{"en":"⚠️ No connection to the cloud","pl":"⚠️ Brak połączenia z chmurą","ru":"⚠️ Нет соединения с облаком","es":"⚠️ Sin conexión con la nube"},"Хмара":{"en":"Cloud","pl":"Chmura","ru":"Облако","es":"Nube"},"✅ Збережено в хмару":{"en":"✅ Saved to the cloud","pl":"✅ Zapisano w chmurze","ru":"✅ Сохранено в облако","es":"✅ Guardado en la nube"},"Немає з'єднання з сервером. Перевірте інтернет і оновіть сторінку":{"en":"Cannot reach the server. Check the internet and reload the page","pl":"Brak połączenia z serwerem. Sprawdź internet i odśwież stronę","ru":"Нет соединения с сервером. Проверьте интернет и обновите страницу","es":"No se puede conectar con el servidor. Revise internet y recargue la página"},"Заміри дверей, підлоги і плінтуса":{"en":"Door, floor and skirting measurements","pl":"Pomiary drzwi, podłóg i listew","ru":"Замеры дверей, пола и плинтуса","es":"Mediciones de puertas, suelos y rodapiés"},"Вхід":{"en":"Sign in","pl":"Logowanie","ru":"Вход","es":"Entrar"},"Реєстрація":{"en":"Sign up","pl":"Rejestracja","ru":"Регистрация","es":"Registro"},"Мінімум 6 символів":{"en":"At least 6 characters","pl":"Co najmniej 6 znaków","ru":"Минимум 6 символов","es":"Mínimo 6 caracteres"},"Забули пароль?":{"en":"Forgot password?","pl":"Nie pamiętasz hasła?","ru":"Забыли пароль?","es":"¿Olvidó la contraseña?"},"Ваші бланки збережені й нікуди не зникли. Щоб і далі працювати в програмі, зверніться до адміністратора сервісу:":{"en":"Your forms are safe and nothing was lost. To keep using the app, contact the service administrator:","pl":"Twoje karty są zapisane i nic nie zginęło. Aby dalej korzystać z aplikacji, skontaktuj się z administratorem usługi:","ru":"Ваши бланки сохранены и никуда не пропали. Чтобы и дальше работать в программе, обратитесь к администратору сервиса:","es":"Sus hojas están guardadas y no se ha perdido nada. Para seguir usando la aplicación, contacte con el administrador del servicio:"},"Коли доступ відкриють, натисніть «Перевірити доступ».":{"en":"Once access is granted, tap “Check access”.","pl":"Gdy dostęp zostanie przyznany, naciśnij „Sprawdź dostęp”.","ru":"Когда доступ откроют, нажмите «Проверить доступ».","es":"Cuando se conceda el acceso, pulse «Comprobar acceso»."},"Перевірити доступ":{"en":"Check access","pl":"Sprawdź dostęp","ru":"Проверить доступ","es":"Comprobar acceso"},"Е-Монтаж":{"en":"Е-Монтаж","pl":"Е-Монтаж","ru":"Е-Монтаж","es":"Е-Монтаж"},"Заміри дверей":{"en":"Door measurements","pl":"Pomiar drzwi","ru":"Замеры дверей","es":"Medición de puertas"},"Дата та місце":{"en":"Date and place","pl":"Data i miejsce","ru":"Дата и место","es":"Fecha y lugar"},"Дата":{"en":"Date","pl":"Data","ru":"Дата","es":"Fecha"},"Магазин":{"en":"Store","pl":"Sklep","ru":"Магазин","es":"Tienda"},"Назва":{"en":"Name","pl":"Nazwa","ru":"Название","es":"Nombre"},"Адреса":{"en":"Address","pl":"Adres","ru":"Адрес","es":"Dirección"},"м. Шептицьки, вул...":{"en":"City, street...","pl":"Miasto, ulica...","ru":"Город, улица...","es":"Ciudad, calle..."},"Менеджер":{"en":"Manager","pl":"Doradca","ru":"Менеджер","es":"Comercial"},"Ім'я менеджера":{"en":"Manager name","pl":"Imię doradcy","ru":"Имя менеджера","es":"Nombre del comercial"},"Дані замовника":{"en":"Customer details","pl":"Dane klienta","ru":"Данные заказчика","es":"Datos del cliente"},"Ім'я":{"en":"Name","pl":"Imię i nazwisko","ru":"Имя","es":"Nombre"},"Іван Петренко":{"en":"John Smith","pl":"Jan Kowalski","ru":"Иван Петров","es":"Juan García"},"м., вул., №":{"en":"City, street, no.","pl":"Miasto, ulica, nr","ru":"г., ул., №","es":"Ciudad, calle, n.º"},"Телефон":{"en":"Phone","pl":"Telefon","ru":"Телефон","es":"Teléfono"},"Товар ТМ":{"en":"Product brand","pl":"Marka","ru":"Товар ТМ","es":"Marca"},"Поверх":{"en":"Floor","pl":"Piętro","ru":"Этаж","es":"Planta"},"Ліфт":{"en":"Lift","pl":"Winda","ru":"Лифт","es":"Ascensor"},"Є":{"en":"Yes","pl":"Jest","ru":"Есть","es":"Sí"},"Немає":{"en":"No","pl":"Brak","ru":"Нет","es":"No"},"Бажана дата монтажу":{"en":"Preferred installation date","pl":"Preferowana data montażu","ru":"Желаемая дата монтажа","es":"Fecha de instalación deseada"},"Виміряні проєми":{"en":"Measured openings","pl":"Zmierzone otwory","ru":"Замеренные проёмы","es":"Huecos medidos"},"Додати двері":{"en":"Add door","pl":"Dodaj drzwi","ru":"Добавить дверь","es":"Añadir puerta"},"Заміри підлоги":{"en":"Floor measurements","pl":"Pomiar podłogi","ru":"Замеры пола","es":"Medición de suelo"},"Разом":{"en":"Total","pl":"Razem","ru":"Итого","es":"Total"},"Додати кімнату":{"en":"Add room","pl":"Dodaj pomieszczenie","ru":"Добавить комнату","es":"Añadir estancia"},"Заміри плінтуса":{"en":"Skirting measurements","pl":"Pomiar listew","ru":"Замеры плинтуса","es":"Medición de rodapié"},"Нотатки":{"en":"Notes","pl":"Notatki","ru":"Заметки","es":"Notas"},"Особливості, рекомендації, матеріал стін...":{"en":"Specifics, recommendations, wall material...","pl":"Szczegóły, zalecenia, materiał ścian...","ru":"Особенности, рекомендации, материал стен...","es":"Detalles, recomendaciones, material de paredes..."},"Підпис замовника":{"en":"Customer signature","pl":"Podpis klienta","ru":"Подпись заказчика","es":"Firma del cliente"},"Підпишіться тут":{"en":"Sign here","pl":"Podpisz tutaj","ru":"Подпишитесь здесь","es":"Firme aquí"},"Очистити":{"en":"Clear","pl":"Wyczyść","ru":"Очистить","es":"Borrar"},"Друк":{"en":"Print","pl":"Drukuj","ru":"Печать","es":"Imprimir"},"Компанія:":{"en":"Company:","pl":"Firma:","ru":"Компания:","es":"Empresa:"},"Дата:":{"en":"Date:","pl":"Data:","ru":"Дата:","es":"Fecha:"},"Менеджер:":{"en":"Manager:","pl":"Doradca:","ru":"Менеджер:","es":"Comercial:"},"Магазин:":{"en":"Store:","pl":"Sklep:","ru":"Магазин:","es":"Tienda:"},"Адреса магазину:":{"en":"Store address:","pl":"Adres sklepu:","ru":"Адрес магазина:","es":"Dirección de la tienda:"},"Замовник:":{"en":"Customer:","pl":"Klient:","ru":"Заказчик:","es":"Cliente:"},"Телефон:":{"en":"Phone:","pl":"Telefon:","ru":"Телефон:","es":"Teléfono:"},"Адреса монтажу:":{"en":"Installation address:","pl":"Adres montażu:","ru":"Адрес монтажа:","es":"Dirección de instalación:"},"Товар ТМ:":{"en":"Product brand:","pl":"Marka:","ru":"Товар ТМ:","es":"Marca:"},"Поверх / ліфт:":{"en":"Floor / lift:","pl":"Piętro / winda:","ru":"Этаж / лифт:","es":"Planta / ascensor:"},"Бажана дата монтажу:":{"en":"Preferred installation date:","pl":"Preferowana data montażu:","ru":"Желаемая дата монтажа:","es":"Fecha de instalación deseada:"},"Тип":{"en":"Type","pl":"Rodzaj","ru":"Тип","es":"Tipo"},"Вис. мм":{"en":"H, mm","pl":"Wys. mm","ru":"Выс. мм","es":"Alto mm"},"Шир. мм":{"en":"W, mm","pl":"Szer. mm","ru":"Шир. мм","es":"Ancho mm"},"Стіна":{"en":"Wall","pl":"Ściana","ru":"Стена","es":"Muro"},"Полотно В×Ш":{"en":"Leaf H×W","pl":"Skrzydło W×S","ru":"Полотно В×Ш","es":"Hoja Al×An"},"Лишт.":{"en":"Casing","pl":"Opaska","ru":"Налич.","es":"Tapaj."},"Відкр.":{"en":"Side","pl":"Otw.","ru":"Откр.","es":"Apert."},"Напр.":{"en":"Swing","pl":"Kier.","ru":"Напр.","es":"Sent."},"Додатково":{"en":"Extra","pl":"Dodatkowo","ru":"Дополнительно","es":"Adicional"},"Нотатки:":{"en":"Notes:","pl":"Notatki:","ru":"Заметки:","es":"Notas:"},"Підпис замовника:":{"en":"Customer signature:","pl":"Podpis klienta:","ru":"Подпись заказчика:","es":"Firma del cliente:"},"Ручка":{"en":"Handle","pl":"Klamka","ru":"Ручка","es":"Manilla"},"Ключ-ключ":{"en":"Key–key","pl":"Klucz–klucz","ru":"Ключ–ключ","es":"Llave–llave"},"Ключ-поворотник":{"en":"Key–thumbturn","pl":"Klucz–gałka","ru":"Ключ–вертушка","es":"Llave–pomo"},"Вітальня":{"en":"Living room","pl":"Salon","ru":"Гостиная","es":"Salón"},"Спальня":{"en":"Bedroom","pl":"Sypialnia","ru":"Спальня","es":"Dormitorio"},"Кухня":{"en":"Kitchen","pl":"Kuchnia","ru":"Кухня","es":"Cocina"},"Санвузол":{"en":"Bathroom & WC","pl":"Łazienka z WC","ru":"Санузел","es":"Baño completo"},"Туалет":{"en":"Toilet","pl":"Toaleta","ru":"Туалет","es":"Aseo"},"Ванна":{"en":"Bathroom","pl":"Łazienka","ru":"Ванная","es":"Baño"},"Гардероб":{"en":"Walk-in closet","pl":"Garderoba","ru":"Гардеробная","es":"Vestidor"},"Кладова":{"en":"Storage room","pl":"Spiżarnia","ru":"Кладовая","es":"Trastero"},"Дитяча":{"en":"Kids' room","pl":"Pokój dziecięcy","ru":"Детская","es":"Habitación infantil"},"Ламінат":{"en":"Laminate","pl":"Panele laminowane","ru":"Ламинат","es":"Laminado"},"Вініл":{"en":"Vinyl","pl":"Winyl","ru":"Винил","es":"Vinilo"},"Паркетна дошка":{"en":"Engineered wood","pl":"Deska warstwowa","ru":"Паркетная доска","es":"Tarima"},"Плитка":{"en":"Tile","pl":"Płytki","ru":"Плитка","es":"Baldosa"},"Інше":{"en":"Other","pl":"Inne","ru":"Другое","es":"Otro"},"Стяжка":{"en":"Screed","pl":"Wylewka","ru":"Стяжка","es":"Solera"},"Дерев'яна":{"en":"Wooden","pl":"Drewniane","ru":"Деревянное","es":"De madera"},"Стара плитка":{"en":"Old tile","pl":"Stare płytki","ru":"Старая плитка","es":"Baldosa antigua"},"МДФ":{"en":"MDF","pl":"MDF","ru":"МДФ","es":"MDF"},"ПВХ":{"en":"PVC","pl":"PCV","ru":"ПВХ","es":"PVC"},"Дюрополімер":{"en":"Duropolymer","pl":"Duropolimer","ru":"Дюрополимер","es":"Duropolímero"},"Дерево":{"en":"Wood","pl":"Drewno","ru":"Дерево","es":"Madera"},"Цегла":{"en":"Brick","pl":"Cegła","ru":"Кирпич","es":"Ladrillo"},"Бетон":{"en":"Concrete","pl":"Beton","ru":"Бетон","es":"Hormigón"},"Газоблок":{"en":"Aerated block","pl":"Gazobeton","ru":"Газоблок","es":"Hormigón celular"},"Гіпсокартон":{"en":"Drywall","pl":"Płyta g-k","ru":"Гипсокартон","es":"Pladur"},"Стандарт":{"en":"Standard","pl":"Standard","ru":"Стандарт","es":"Estándar"},"Нестандарт":{"en":"Non-standard","pl":"Niestandard","ru":"Нестандарт","es":"No estándar"},"Підготують до стандарту":{"en":"Will be made standard","pl":"Dostosują do standardu","ru":"Подготовят под стандарт","es":"Se adaptará al estándar"},"Адміністратор":{"en":"Administrator","pl":"Administrator","ru":"Администратор","es":"Administrador"},"Клієнт":{"en":"Client","pl":"Klient","ru":"Клиент","es":"Cliente"},"Безкоштовно":{"en":"Free","pl":"Bezpłatnie","ru":"Бесплатно","es":"Gratis"},"Логотип":{"en":"Logo","pl":"Logo","ru":"Логотип","es":"Logotipo"},"PNG або JPG, найкраще на прозорому чи білому фоні. Показується вгорі програми і на бланку для друку.":{"en":"PNG or JPG, ideally on a transparent or white background. Shown at the top of the app and on the printed form.","pl":"PNG lub JPG, najlepiej na przezroczystym lub białym tle. Wyświetla się u góry aplikacji i na wydruku karty.","ru":"PNG или JPG, лучше на прозрачном или белом фоне. Показывается вверху программы и на бланке для печати.","es":"PNG o JPG, mejor con fondo transparente o blanco. Se muestra arriba en la aplicación y en la hoja impresa."},"Завантажити":{"en":"Upload","pl":"Wgraj","ru":"Загрузить","es":"Subir"},"Змінити":{"en":"Change","pl":"Zmień","ru":"Изменить","es":"Cambiar"},"✅ Логотип збережено":{"en":"✅ Logo saved","pl":"✅ Logo zapisane","ru":"✅ Логотип сохранён","es":"✅ Logotipo guardado"},"🗑 Логотип видалено":{"en":"🗑 Logo removed","pl":"🗑 Logo usunięte","ru":"🗑 Логотип удалён","es":"🗑 Logotipo eliminado"},"⚠️ Не вдалося прочитати зображення":{"en":"⚠️ Could not read the image","pl":"⚠️ Nie udało się odczytać obrazu","ru":"⚠️ Не удалось прочитать изображение","es":"⚠️ No se pudo leer la imagen"}};
+var I18N = {"⚠️ Пам'ять заповнена: видаліть зайві фото":{"en":"⚠️ Storage is full: delete some photos","pl":"⚠️ Pamięć pełna: usuń zbędne zdjęcia","ru":"⚠️ Память заполнена: удалите лишние фото","es":"⚠️ Memoria llena: elimine fotos innecesarias"},"Оберіть":{"en":"Select","pl":"Wybierz","ru":"Выберите","es":"Elegir"},"Інший…":{"en":"Other…","pl":"Inny…","ru":"Другой…","es":"Otro…"}," м²":{"en":" m²","pl":" m²","ru":" м²","es":" m²"}," м":{"en":" m","pl":" m","ru":" м","es":" m"},"м":{"en":"m","pl":"m","ru":"м","es":"m"},"Примітка":{"en":"Note","pl":"Uwagi","ru":"Примечание","es":"Nota"},"Що врахувати...":{"en":"What to consider...","pl":"Co uwzględnić...","ru":"Что учесть...","es":"Qué tener en cuenta..."},"🪵 Підлога №":{"en":"🪵 Floor #","pl":"🪵 Podłoga nr ","ru":"🪵 Пол №","es":"🪵 Suelo n.º "},"Довжина":{"en":"Length","pl":"Długość","ru":"Длина","es":"Largo"},"Ширина":{"en":"Width","pl":"Szerokość","ru":"Ширина","es":"Ancho"},"Площа":{"en":"Area","pl":"Powierzchnia","ru":"Площадь","es":"Superficie"},"Покриття":{"en":"Flooring","pl":"Wykładzina","ru":"Покрытие","es":"Revestimiento"},"Основа":{"en":"Subfloor","pl":"Podłoże","ru":"Основание","es":"Base"},"Вирівнювання":{"en":"Levelling","pl":"Wyrównanie","ru":"Выравнивание","es":"Nivelación"},"Демонтаж старої підлоги":{"en":"Remove old floor","pl":"Demontaż starej podłogi","ru":"Демонтаж старого пола","es":"Retirar suelo antiguo"},"Фото підлоги":{"en":"Floor photos","pl":"Zdjęcia podłogi","ru":"Фото пола","es":"Fotos del suelo"},"📏 Плінтус №":{"en":"📏 Skirting #","pl":"📏 Listwa nr ","ru":"📏 Плинтус №","es":"📏 Rodapié n.º "},"Периметр стін":{"en":"Wall perimeter","pl":"Obwód ścian","ru":"Периметр стен","es":"Perímetro de paredes"},"Дверні прорізи":{"en":"Door openings","pl":"Otwory drzwiowe","ru":"Дверные проёмы","es":"Huecos de puertas"},"Плінтуса потрібно":{"en":"Skirting needed","pl":"Potrzeba listew","ru":"Нужно плинтуса","es":"Rodapié necesario"},"Матеріал":{"en":"Material","pl":"Materiał","ru":"Материал","es":"Material"},"Висота плінтуса":{"en":"Skirting height","pl":"Wysokość listwy","ru":"Высота плинтуса","es":"Altura del rodapié"},"мм":{"en":"mm","pl":"mm","ru":"мм","es":"mm"},"Внутрішні кути":{"en":"Inner corners","pl":"Narożniki wewnętrzne","ru":"Внутренние углы","es":"Esquinas interiores"},"шт":{"en":"pcs","pl":"szt.","ru":"шт","es":"uds."},"Зовнішні кути":{"en":"Outer corners","pl":"Narożniki zewnętrzne","ru":"Внешние углы","es":"Esquinas exteriores"},"Демонтаж старого":{"en":"Remove old","pl":"Demontaż starych","ru":"Демонтаж старого","es":"Retirar el antiguo"},"Фото стін":{"en":"Wall photos","pl":"Zdjęcia ścian","ru":"Фото стен","es":"Fotos de paredes"},"📷 Фото додано":{"en":"📷 Photo added","pl":"📷 Dodano zdjęcie","ru":"📷 Фото добавлено","es":"📷 Foto añadida"},"🚪 Двері №":{"en":"🚪 Door #","pl":"🚪 Drzwi nr ","ru":"🚪 Дверь №","es":"🚪 Puerta n.º "}," (подвійні)":{"en":" (double)","pl":" (dwuskrzydłowe)","ru":" (двойная)","es":" (doble)"},"Тип дверей":{"en":"Door type","pl":"Rodzaj drzwi","ru":"Тип двери","es":"Tipo de puerta"},"Одинарні":{"en":"Single","pl":"Jednoskrzydłowe","ru":"Одинарная","es":"Simple"},"Подвійні":{"en":"Double","pl":"Dwuskrzydłowe","ru":"Двойная","es":"Doble"},"Висота проєму":{"en":"Opening height","pl":"Wysokość otworu","ru":"Высота проёма","es":"Alto del hueco"},"Ширина проєму":{"en":"Opening width","pl":"Szerokość otworu","ru":"Ширина проёма","es":"Ancho del hueco"},"Товщ. стіни":{"en":"Wall thickness","pl":"Grubość ściany","ru":"Толщ. стены","es":"Grosor del muro"},"Матеріал стіни":{"en":"Wall material","pl":"Materiał ściany","ru":"Материал стены","es":"Material del muro"},"Підгот. проєм":{"en":"Opening prep","pl":"Przygotowanie otworu","ru":"Подгот. проёма","es":"Prep. del hueco"},"Полотно ширина 1 (активна стулка)":{"en":"Leaf width 1 (active leaf)","pl":"Szer. skrzydła 1 (czynne)","ru":"Ширина полотна 1 (активная створка)","es":"Ancho hoja 1 (activa)"},"Полотно ширина":{"en":"Leaf width","pl":"Szerokość skrzydła","ru":"Ширина полотна","es":"Ancho de la hoja"},"Полотно ширина 2 (пасивна стулка)":{"en":"Leaf width 2 (passive leaf)","pl":"Szer. skrzydła 2 (bierne)","ru":"Ширина полотна 2 (пассивная створка)","es":"Ancho hoja 2 (pasiva)"},"Полотно висота":{"en":"Leaf height","pl":"Wysokość skrzydła","ru":"Высота полотна","es":"Alto de la hoja"},"Полотно шир. 1":{"en":"Leaf width 1","pl":"Szer. skrzydła 1","ru":"Шир. полотна 1","es":"Ancho hoja 1"},"Полотно шир. 2":{"en":"Leaf width 2","pl":"Szer. skrzydła 2","ru":"Шир. полотна 2","es":"Ancho hoja 2"},"Лиштва":{"en":"Casing","pl":"Opaska","ru":"Наличник","es":"Tapajuntas"},"1 к-кт":{"en":"1 set","pl":"1 kpl.","ru":"1 к-т","es":"1 juego"},"2 к-кт":{"en":"2 sets","pl":"2 kpl.","ru":"2 к-та","es":"2 juegos"},"Відкриття (активна стулка)":{"en":"Opening side (active leaf)","pl":"Otwieranie (skrzydło czynne)","ru":"Открывание (активная створка)","es":"Apertura (hoja activa)"},"Відкриття":{"en":"Opening side","pl":"Otwieranie","ru":"Открывание","es":"Apertura"},"Праве":{"en":"Right","pl":"Prawe","ru":"Правое","es":"Derecha"},"Ліве":{"en":"Left","pl":"Lewe","ru":"Левое","es":"Izquierda"},"Напрямок":{"en":"Swing","pl":"Kierunek","ru":"Направление","es":"Sentido"},"Всередину":{"en":"Inward","pl":"Do wewnątrz","ru":"Внутрь","es":"Hacia dentro"},"Назовні":{"en":"Outward","pl":"Na zewnątrz","ru":"Наружу","es":"Hacia fuera"},"Так":{"en":"Yes","pl":"Tak","ru":"Да","es":"Sí"},"Ні":{"en":"No","pl":"Nie","ru":"Нет","es":"No"},"Замок":{"en":"Lock","pl":"Zamek","ru":"Замок","es":"Cerradura"},"Підлога":{"en":"Floor","pl":"Podłoga","ru":"Пол","es":"Suelo"},"Ремонт":{"en":"Renovation","pl":"Remont","ru":"Ремонт","es":"Reforma"},"Демонтаж":{"en":"Removal","pl":"Demontaż","ru":"Демонтаж","es":"Desmontaje"},"Фото проєму":{"en":"Opening photos","pl":"Zdjęcia otworu","ru":"Фото проёма","es":"Fotos del hueco"},"Фото":{"en":"Photo","pl":"Zdjęcie","ru":"Фото","es":"Foto"},"Інше…":{"en":"Other…","pl":"Inne…","ru":"Другое…","es":"Otra…"},"Кімната":{"en":"Room","pl":"Pomieszczenie","ru":"Комната","es":"Estancia"},"Назва кімнати":{"en":"Room name","pl":"Nazwa pomieszczenia","ru":"Название комнаты","es":"Nombre de la estancia"},"Ввести вручну":{"en":"Type manually","pl":"Wpisz ręcznie","ru":"Ввести вручную","es":"Escribir a mano"},"Стіна: ":{"en":"Wall: ","pl":"Ściana: ","ru":"Стена: ","es":"Muro: "},"ліфт: ":{"en":"lift: ","pl":"winda: ","ru":"лифт: ","es":"ascensor: "},"Подв.":{"en":"Dbl.","pl":"Dwuskrz.","ru":"Двойн.","es":"Doble"},"Один.":{"en":"Sgl.","pl":"Jednoskrz.","ru":"Один.","es":"Simple"},"Двері":{"en":"Doors","pl":"Drzwi","ru":"Двери","es":"Puertas"},"Плінтус":{"en":"Skirting","pl":"Listwy","ru":"Плинтус","es":"Rodapié"},"Фото:":{"en":"Photos:","pl":"Zdjęcia:","ru":"Фото:","es":"Fotos:"},"Разом, м²:":{"en":"Total, m²:","pl":"Razem, m²:","ru":"Итого, м²:","es":"Total, m²:"},"Довжина, м":{"en":"Length, m","pl":"Długość, m","ru":"Длина, м","es":"Largo, m"},"Ширина, м":{"en":"Width, m","pl":"Szerokość, m","ru":"Ширина, м","es":"Ancho, m"},"Площа, м²":{"en":"Area, m²","pl":"Pow., m²","ru":"Площадь, м²","es":"Sup., m²"},"Вирівн.":{"en":"Level.","pl":"Wyrówn.","ru":"Выравн.","es":"Nivel."},"Демонт.":{"en":"Remov.","pl":"Demont.","ru":"Демонт.","es":"Desm."},"Разом, м:":{"en":"Total, m:","pl":"Razem, m:","ru":"Итого, м:","es":"Total, m:"},"Периметр, м":{"en":"Perimeter, m","pl":"Obwód, m","ru":"Периметр, м","es":"Perímetro, m"},"Прорізи, м":{"en":"Openings, m","pl":"Otwory, m","ru":"Проёмы, м","es":"Huecos, m"},"Плінтуса, м":{"en":"Skirting, m","pl":"Listwy, m","ru":"Плинтуса, м","es":"Rodapié, m"},"Висота, мм":{"en":"Height, mm","pl":"Wysokość, mm","ru":"Высота, мм","es":"Alto, mm"},"Внутр. кути":{"en":"Inner corners","pl":"Narożn. wewn.","ru":"Внутр. углы","es":"Esq. int."},"Зовн. кути":{"en":"Outer corners","pl":"Narożn. zewn.","ru":"Внешн. углы","es":"Esq. ext."},"Бланк замірів":{"en":"Measurement form","pl":"Karta pomiarów","ru":"Бланк замеров","es":"Hoja de mediciones"},"⚠️ Дозвольте спливаючі вікна":{"en":"⚠️ Allow pop-up windows","pl":"⚠️ Zezwól na wyskakujące okna","ru":"⚠️ Разрешите всплывающие окна","es":"⚠️ Permita las ventanas emergentes"},"📋 БЛАНК ЗАМІРІВ\n":{"en":"📋 MEASUREMENT FORM\n","pl":"📋 KARTA POMIARÓW\n","ru":"📋 БЛАНК ЗАМЕРОВ\n","es":"📋 HOJA DE MEDICIONES\n"},"📅 Дата: ":{"en":"📅 Date: ","pl":"📅 Data: ","ru":"📅 Дата: ","es":"📅 Fecha: "},"🏪 Магазин: ":{"en":"🏪 Store: ","pl":"🏪 Sklep: ","ru":"🏪 Магазин: ","es":"🏪 Tienda: "},"📍 Адреса магазину: ":{"en":"📍 Store address: ","pl":"📍 Adres sklepu: ","ru":"📍 Адрес магазина: ","es":"📍 Dirección de la tienda: "},"👤 Менеджер: ":{"en":"👤 Manager: ","pl":"👤 Doradca: ","ru":"👤 Менеджер: ","es":"👤 Comercial: "},"━━━ ЗАМОВНИК ━━━\n":{"en":"━━━ CUSTOMER ━━━\n","pl":"━━━ KLIENT ━━━\n","ru":"━━━ ЗАКАЗЧИК ━━━\n","es":"━━━ CLIENTE ━━━\n"},"👤 Ім'я: ":{"en":"👤 Name: ","pl":"👤 Imię i nazwisko: ","ru":"👤 Имя: ","es":"👤 Nombre: "},"📞 Телефон: ":{"en":"📞 Phone: ","pl":"📞 Telefon: ","ru":"📞 Телефон: ","es":"📞 Teléfono: "},"📍 Адреса монтажу: ":{"en":"📍 Installation address: ","pl":"📍 Adres montażu: ","ru":"📍 Адрес монтажа: ","es":"📍 Dirección de instalación: "},"🚪 Товар ТМ: ":{"en":"🚪 Product brand: ","pl":"🚪 Marka produktu: ","ru":"🚪 Товар ТМ: ","es":"🚪 Marca del producto: "},"🏢 Поверх: ":{"en":"🏢 Floor: ","pl":"🏢 Piętro: ","ru":"🏢 Этаж: ","es":"🏢 Planta: "},"🛗 Ліфт: ":{"en":"🛗 Lift: ","pl":"🛗 Winda: ","ru":"🛗 Лифт: ","es":"🛗 Ascensor: "},"📅 Бажана дата монтажу: ":{"en":"📅 Preferred installation date: ","pl":"📅 Preferowana data montażu: ","ru":"📅 Желаемая дата монтажа: ","es":"📅 Fecha de instalación deseada: "},"━━━ ДВЕРІ (":{"en":"━━━ DOORS (","pl":"━━━ DRZWI (","ru":"━━━ ДВЕРИ (","es":"━━━ PUERTAS ("}," шт) ━━━\n":{"en":" pcs) ━━━\n","pl":" szt.) ━━━\n","ru":" шт) ━━━\n","es":" uds.) ━━━\n"},"\n🚪 Двері №":{"en":"\n🚪 Door #","pl":"\n🚪 Drzwi nr ","ru":"\n🚪 Дверь №","es":"\n🚪 Puerta n.º "},"   Проєм: ":{"en":"   Opening: ","pl":"   Otwór: ","ru":"   Проём: ","es":"   Hueco: "}," мм\n":{"en":" mm\n","pl":" mm\n","ru":" мм\n","es":" mm\n"},"   Товщина стіни: ":{"en":"   Wall thickness: ","pl":"   Grubość ściany: ","ru":"   Толщина стены: ","es":"   Grosor del muro: "},"   Підготовка проєму: ":{"en":"   Opening prep: ","pl":"   Przygotowanie otworu: ","ru":"   Подготовка проёма: ","es":"   Preparación del hueco: "},"   Полотно: ":{"en":"   Leaf: ","pl":"   Skrzydło: ","ru":"   Полотно: ","es":"   Hoja: "},"   Лиштва: ":{"en":"   Casing: ","pl":"   Opaska: ","ru":"   Наличник: ","es":"   Tapajuntas: "},"   Відкриття: ":{"en":"   Opening side: ","pl":"   Otwieranie: ","ru":"   Открывание: ","es":"   Apertura: "},"   Напрямок: ":{"en":"   Swing: ","pl":"   Kierunek: ","ru":"   Направление: ","es":"   Sentido: "},"   Замок: ":{"en":"   Lock: ","pl":"   Zamek: ","ru":"   Замок: ","es":"   Cerradura: "},"   Роботи: ":{"en":"   Works: ","pl":"   Prace: ","ru":"   Работы: ","es":"   Trabajos: "},"\n━━━ ПІДЛОГА ━━━\n":{"en":"\n━━━ FLOOR ━━━\n","pl":"\n━━━ PODŁOGA ━━━\n","ru":"\n━━━ ПОЛ ━━━\n","es":"\n━━━ SUELO ━━━\n"}," м = ":{"en":" m = ","pl":" m = ","ru":" м = ","es":" m = "}," м²\n":{"en":" m²\n","pl":" m²\n","ru":" м²\n","es":" m²\n"},"   Покриття: ":{"en":"   Flooring: ","pl":"   Wykładzina: ","ru":"   Покрытие: ","es":"   Revestimiento: "},"   Основа: ":{"en":"   Subfloor: ","pl":"   Podłoże: ","ru":"   Основание: ","es":"   Base: "},"   Вирівнювання\n":{"en":"   Levelling\n","pl":"   Wyrównanie\n","ru":"   Выравнивание\n","es":"   Nivelación\n"},"   Демонтаж старої підлоги\n":{"en":"   Remove old floor\n","pl":"   Demontaż starej podłogi\n","ru":"   Демонтаж старого пола\n","es":"   Retirar suelo antiguo\n"},"\nРазом: ":{"en":"\nTotal: ","pl":"\nRazem: ","ru":"\nИтого: ","es":"\nTotal: "},"\n━━━ ПЛІНТУС ━━━\n":{"en":"\n━━━ SKIRTING ━━━\n","pl":"\n━━━ LISTWY ━━━\n","ru":"\n━━━ ПЛИНТУС ━━━\n","es":"\n━━━ RODAPIÉ ━━━\n"},"   Плінтуса: ":{"en":"   Skirting: ","pl":"   Listwy: ","ru":"   Плинтуса: ","es":"   Rodapié: "}," м (периметр ":{"en":" m (perimeter ","pl":" m (obwód ","ru":" м (периметр ","es":" m (perímetro "},", прорізи ":{"en":", openings ","pl":", otwory ","ru":", проёмы ","es":", huecos "},"   Матеріал: ":{"en":"   Material: ","pl":"   Materiał: ","ru":"   Материал: ","es":"   Material: "},"   Висота: ":{"en":"   Height: ","pl":"   Wysokość: ","ru":"   Высота: ","es":"   Alto: "},"   Внутрішні кути: ":{"en":"   Inner corners: ","pl":"   Narożniki wewnętrzne: ","ru":"   Внутренние углы: ","es":"   Esquinas interiores: "},"   Зовнішні кути: ":{"en":"   Outer corners: ","pl":"   Narożniki zewnętrzne: ","ru":"   Внешние углы: ","es":"   Esquinas exteriores: "},"   Демонтаж старого\n":{"en":"   Remove old\n","pl":"   Demontaż starych\n","ru":"   Демонтаж старого\n","es":"   Retirar el antiguo\n"}," м\n":{"en":" m\n","pl":" m\n","ru":" м\n","es":" m\n"},"\n📝 Нотатки: ":{"en":"\n📝 Notes: ","pl":"\n📝 Notatki: ","ru":"\n📝 Заметки: ","es":"\n📝 Notas: "},"✅ Скопійовано":{"en":"✅ Copied","pl":"✅ Skopiowano","ru":"✅ Скопировано","es":"✅ Copiado"},"Невірний email або пароль":{"en":"Wrong email or password","pl":"Nieprawidłowy e-mail lub hasło","ru":"Неверный email или пароль","es":"Email o contraseña incorrectos"},"Невірний пароль":{"en":"Wrong password","pl":"Nieprawidłowe hasło","ru":"Неверный пароль","es":"Contraseña incorrecta"},"Акаунт з таким email не знайдено":{"en":"No account with this email","pl":"Nie znaleziono konta z tym e-mailem","ru":"Аккаунт с таким email не найден","es":"No hay ninguna cuenta con este email"},"Перевірте email":{"en":"Check the email","pl":"Sprawdź e-mail","ru":"Проверьте email","es":"Revise el email"},"Введіть email":{"en":"Enter your email","pl":"Wpisz e-mail","ru":"Введите email","es":"Introduzca su email"},"Введіть пароль":{"en":"Enter your password","pl":"Wpisz hasło","ru":"Введите пароль","es":"Introduzca la contraseña"},"Цей email уже зареєстровано. Увійдіть":{"en":"This email is already registered. Please sign in","pl":"Ten e-mail jest już zarejestrowany. Zaloguj się","ru":"Этот email уже зарегистрирован. Войдите","es":"Este email ya está registrado. Inicie sesión"},"Пароль має бути не менше 6 символів":{"en":"Password must be at least 6 characters","pl":"Hasło musi mieć co najmniej 6 znaków","ru":"Пароль должен быть не короче 6 символов","es":"La contraseña debe tener al menos 6 caracteres"},"Забагато спроб. Спробуйте пізніше":{"en":"Too many attempts. Try again later","pl":"Zbyt wiele prób. Spróbuj później","ru":"Слишком много попыток. Попробуйте позже","es":"Demasiados intentos. Inténtelo más tarde"},"Немає інтернету":{"en":"No internet connection","pl":"Brak internetu","ru":"Нет интернета","es":"Sin conexión a internet"},"Увійдіть ще раз і повторіть":{"en":"Sign in again and retry","pl":"Zaloguj się ponownie i powtórz","ru":"Войдите ещё раз и повторите","es":"Inicie sesión de nuevo y repita"},"Немає доступу. Перевірте тариф":{"en":"No access. Check your plan","pl":"Brak dostępu. Sprawdź plan","ru":"Нет доступа. Проверьте тариф","es":"Sin acceso. Revise su plan"},"Бланк не знайдено":{"en":"Form not found","pl":"Nie znaleziono karty","ru":"Бланк не найден","es":"Hoja no encontrada"},"Помилка: ":{"en":"Error: ","pl":"Błąd: ","ru":"Ошибка: ","es":"Error: "},"невідома":{"en":"unknown","pl":"nieznany","ru":"неизвестная","es":"desconocido"},"Зареєструватися":{"en":"Sign up","pl":"Zarejestruj się","ru":"Зарегистрироваться","es":"Registrarse"},"Увійти":{"en":"Sign in","pl":"Zaloguj się","ru":"Войти","es":"Entrar"},"Після реєстрації — 14 днів безкоштовно, без оплати і карток.":{"en":"14 days free after sign-up, no payment or card needed.","pl":"Po rejestracji 14 dni za darmo, bez płatności i karty.","ru":"После регистрации — 14 дней бесплатно, без оплаты и карт.","es":"14 días gratis tras registrarse, sin pago ni tarjeta."},"Немає з'єднання. Перевірте інтернет і оновіть сторінку":{"en":"No connection. Check the internet and reload the page","pl":"Brak połączenia. Sprawdź internet i odśwież stronę","ru":"Нет соединения. Проверьте интернет и обновите страницу","es":"Sin conexión. Revise internet y recargue la página"},"Вкажіть назву компанії":{"en":"Enter the company name","pl":"Podaj nazwę firmy","ru":"Укажите название компании","es":"Indique el nombre de la empresa"},"Введіть email, і ми надішлемо посилання":{"en":"Enter your email and we will send a link","pl":"Wpisz e-mail, a wyślemy link","ru":"Введите email, и мы отправим ссылку","es":"Introduzca su email y le enviaremos un enlace"},"📧 Посилання надіслано на ":{"en":"📧 Link sent to ","pl":"📧 Link wysłano na ","ru":"📧 Ссылка отправлена на ","es":"📧 Enlace enviado a "},"База ще не налаштована: опублікуйте правила Firestore":{"en":"Database not set up yet: publish the Firestore rules","pl":"Baza nie jest skonfigurowana: opublikuj reguły Firestore","ru":"База ещё не настроена: опубликуйте правила Firestore","es":"La base de datos no está configurada: publique las reglas de Firestore"},"Пробний період: ":{"en":"Trial: ","pl":"Okres próbny: ","ru":"Пробный период: ","es":"Prueba: "}," дн.":{"en":" days","pl":" dni","ru":" дн.","es":" días"},"Пробний період закінчився":{"en":"Trial period has ended","pl":"Okres próbny dobiegł końca","ru":"Пробный период закончился","es":"El periodo de prueba ha terminado"},"✅ Доступ відкрито":{"en":"✅ Access granted","pl":"✅ Dostęp przyznany","ru":"✅ Доступ открыт","es":"✅ Acceso concedido"},"Доступ ще не відкрито":{"en":"Access not granted yet","pl":"Dostęp nie został jeszcze przyznany","ru":"Доступ ещё не открыт","es":"El acceso aún no está concedido"},"Закрити":{"en":"Close","pl":"Zamknij","ru":"Закрыть","es":"Cerrar"},"Скасувати":{"en":"Cancel","pl":"Anuluj","ru":"Отмена","es":"Cancelar"}," · ще ":{"en":" · ","pl":" · jeszcze ","ru":" · ещё ","es":" · quedan "}," · закінчився":{"en":" · ended","pl":" · zakończony","ru":" · закончился","es":" · terminado"},"Компанія":{"en":"Company","pl":"Firma","ru":"Компания","es":"Empresa"},"Назва компанії":{"en":"Company name","pl":"Nazwa firmy","ru":"Название компании","es":"Nombre de la empresa"},"Мова":{"en":"Language","pl":"Język","ru":"Язык","es":"Idioma"},"Тариф":{"en":"Plan","pl":"Plan","ru":"Тариф","es":"Plan"},"Менеджери — по одному в рядку":{"en":"Managers — one per line","pl":"Doradcy — po jednym w wierszu","ru":"Менеджеры — по одному в строке","es":"Comerciales — uno por línea"},"Іван&#10;Олена":{"en":"John&#10;Anna","pl":"Jan&#10;Anna","ru":"Иван&#10;Елена","es":"Juan&#10;Ana"},"📂 Архів бланків":{"en":"📂 Forms archive","pl":"📂 Archiwum kart","ru":"📂 Архив бланков","es":"📂 Archivo de hojas"},"📄 Новий бланк":{"en":"📄 New form","pl":"📄 Nowa karta","ru":"📄 Новый бланк","es":"📄 Nueva hoja"},"🛠 Адмін-панель":{"en":"🛠 Admin panel","pl":"🛠 Panel administratora","ru":"🛠 Админ-панель","es":"🛠 Panel de administración"},"Вийти з акаунта":{"en":"Sign out","pl":"Wyloguj się","ru":"Выйти из аккаунта","es":"Cerrar sesión"},"Політика конфіденційності":{"en":"Privacy policy","pl":"Polityka prywatności","ru":"Политика конфиденциальности","es":"Política de privacidad"},"Видалити акаунт":{"en":"Delete account","pl":"Usuń konto","ru":"Удалить аккаунт","es":"Eliminar cuenta"},"Профіль":{"en":"Profile","pl":"Profil","ru":"Профиль","es":"Perfil"},"✅ Збережено":{"en":"✅ Saved","pl":"✅ Zapisano","ru":"✅ Сохранено","es":"✅ Guardado"},"✅ Менеджерів збережено":{"en":"✅ Managers saved","pl":"✅ Zapisano doradców","ru":"✅ Менеджеры сохранены","es":"✅ Comerciales guardados"},"Почати новий бланк?":{"en":"Start a new form?","pl":"Zacząć nową kartę?","ru":"Начать новый бланк?","es":"¿Empezar una hoja nueva?"},"Поточний бланк буде очищено. Якщо він потрібен — спершу збережіть його в хмару. Магазин і менеджер залишаться.":{"en":"The current form will be cleared. If you need it, save it to the cloud first. Store and manager will stay.","pl":"Bieżąca karta zostanie wyczyszczona. Jeśli jest potrzebna, najpierw zapisz ją w chmurze. Sklep i doradca pozostaną.","ru":"Текущий бланк будет очищен. Если он нужен — сначала сохраните его в облако. Магазин и менеджер останутся.","es":"La hoja actual se vaciará. Si la necesita, guárdela antes en la nube. La tienda y el comercial se mantendrán."},"Почати":{"en":"Start","pl":"Zacznij","ru":"Начать","es":"Empezar"},"Архів бланків":{"en":"Forms archive","pl":"Archiwum kart","ru":"Архив бланков","es":"Archivo de hojas"},"Завантаження…":{"en":"Loading…","pl":"Ładowanie…","ru":"Загрузка…","es":"Cargando…"},"Пошук: ім'я, адреса, телефон":{"en":"Search: name, address, phone","pl":"Szukaj: imię, adres, telefon","ru":"Поиск: имя, адрес, телефон","es":"Buscar: nombre, dirección, teléfono"},"дверей ":{"en":"doors ","pl":"drzwi ","ru":"дверей ","es":"puertas "},"підлога ":{"en":"floor ","pl":"podłoga ","ru":"пол ","es":"suelo "},"плінтус ":{"en":"skirting ","pl":"listwy ","ru":"плинтус ","es":"rodapié "},"Без імені":{"en":"No name","pl":"Bez nazwy","ru":"Без имени","es":"Sin nombre"},"відкритий":{"en":"open","pl":"otwarta","ru":"открыт","es":"abierta"},"Видалити":{"en":"Delete","pl":"Usuń","ru":"Удалить","es":"Eliminar"},"Нічого не знайдено":{"en":"Nothing found","pl":"Nic nie znaleziono","ru":"Ничего не найдено","es":"No se encontró nada"},"Ще немає збережених бланків. Натисніть «Хмара», щоб зберегти поточний.":{"en":"No saved forms yet. Tap “Cloud” to save the current one.","pl":"Brak zapisanych kart. Naciśnij „Chmura”, aby zapisać bieżącą.","ru":"Ещё нет сохранённых бланков. Нажмите «Облако», чтобы сохранить текущий.","es":"Aún no hay hojas guardadas. Pulse «Nube» para guardar la actual."},"Відкриваю…":{"en":"Opening…","pl":"Otwieram…","ru":"Открываю…","es":"Abriendo…"},"📂 Бланк відкрито":{"en":"📂 Form opened","pl":"📂 Karta otwarta","ru":"📂 Бланк открыт","es":"📂 Hoja abierta"},"Видалити бланк?":{"en":"Delete form?","pl":"Usunąć kartę?","ru":"Удалить бланк?","es":"¿Eliminar la hoja?"},". Відновити його не можна.":{"en":". It cannot be restored.","pl":". Nie można jej przywrócić.","ru":". Восстановить его нельзя.","es":". No se podrá recuperar."},"🗑 Бланк видалено":{"en":"🗑 Form deleted","pl":"🗑 Karta usunięta","ru":"🗑 Бланк удалён","es":"🗑 Hoja eliminada"},"Адмін-панель":{"en":"Admin panel","pl":"Panel administratora","ru":"Админ-панель","es":"Panel de administración"},"Пошук: компанія або email":{"en":"Search: company or email","pl":"Szukaj: firma lub e-mail","ru":"Поиск: компания или email","es":"Buscar: empresa o email"},"Усього: ":{"en":"Total: ","pl":"Razem: ","ru":"Всего: ","es":"Total: "}," · Клієнтів: ":{"en":" · Clients: ","pl":" · Klientów: ","ru":" · Клиентов: ","es":" · Clientes: "}," · Безкоштовно: ":{"en":" · Free: ","pl":" · Bezpłatnie: ","ru":" · Бесплатно: ","es":" · Gratis: "}," (закінчився: ":{"en":" (ended: ","pl":" (zakończony: ","ru":" (закончился: ","es":" (terminado: "}," · Адмінів: ":{"en":" · Admins: ","pl":" · Administratorów: ","ru":" · Админов: ","es":" · Administradores: "},"до ":{"en":"until ","pl":"do ","ru":"до ","es":"hasta "},"закінчився ":{"en":"ended ","pl":"zakończony ","ru":"закончился ","es":"terminó el "},"+14 дн.":{"en":"+14 days","pl":"+14 dni","ru":"+14 дн.","es":"+14 días"},"ви":{"en":"you","pl":"ty","ru":"вы","es":"usted"}," · з ":{"en":" · since ","pl":" · od ","ru":" · с ","es":" · desde "},"Нікого не знайдено":{"en":"No one found","pl":"Nikogo nie znaleziono","ru":"Никого не найдено","es":"No se encontró a nadie"},"✅ Пробний період до ":{"en":"✅ Trial until ","pl":"✅ Okres próbny do ","ru":"✅ Пробный период до ","es":"✅ Prueba hasta el "},"Видалити акаунт?":{"en":"Delete account?","pl":"Usunąć konto?","ru":"Удалить аккаунт?","es":"¿Eliminar la cuenta?"},"Буде видалено акаунт ":{"en":"This will delete the account ","pl":"Zostanie usunięte konto ","ru":"Будет удалён аккаунт ","es":"Se eliminará la cuenta "}," і всі збережені бланки з фото. Відновити їх не можна.":{"en":" and all saved forms with photos. They cannot be restored.","pl":" oraz wszystkie zapisane karty ze zdjęciami. Nie można ich przywrócić.","ru":" и все сохранённые бланки с фото. Восстановить их нельзя.","es":" y todas las hojas guardadas con fotos. No se podrán recuperar."},"Пароль":{"en":"Password","pl":"Hasło","ru":"Пароль","es":"Contraseña"},"Для підтвердження":{"en":"To confirm","pl":"Aby potwierdzić","ru":"Для подтверждения","es":"Para confirmar"},"Видалити назавжди":{"en":"Delete forever","pl":"Usuń na zawsze","ru":"Удалить навсегда","es":"Eliminar para siempre"},"⚠️ Немає з'єднання з хмарою":{"en":"⚠️ No connection to the cloud","pl":"⚠️ Brak połączenia z chmurą","ru":"⚠️ Нет соединения с облаком","es":"⚠️ Sin conexión con la nube"},"Хмара":{"en":"Cloud","pl":"Chmura","ru":"Облако","es":"Nube"},"✅ Збережено в хмару":{"en":"✅ Saved to the cloud","pl":"✅ Zapisano w chmurze","ru":"✅ Сохранено в облако","es":"✅ Guardado en la nube"},"Немає з'єднання з сервером. Перевірте інтернет і оновіть сторінку":{"en":"Cannot reach the server. Check the internet and reload the page","pl":"Brak połączenia z serwerem. Sprawdź internet i odśwież stronę","ru":"Нет соединения с сервером. Проверьте интернет и обновите страницу","es":"No se puede conectar con el servidor. Revise internet y recargue la página"},"Заміри дверей, підлоги і плінтуса":{"en":"Door, floor and skirting measurements","pl":"Pomiary drzwi, podłóg i listew","ru":"Замеры дверей, пола и плинтуса","es":"Mediciones de puertas, suelos y rodapiés"},"Вхід":{"en":"Sign in","pl":"Logowanie","ru":"Вход","es":"Entrar"},"Реєстрація":{"en":"Sign up","pl":"Rejestracja","ru":"Регистрация","es":"Registro"},"Мінімум 6 символів":{"en":"At least 6 characters","pl":"Co najmniej 6 znaków","ru":"Минимум 6 символов","es":"Mínimo 6 caracteres"},"Забули пароль?":{"en":"Forgot password?","pl":"Nie pamiętasz hasła?","ru":"Забыли пароль?","es":"¿Olvidó la contraseña?"},"Ваші бланки збережені й нікуди не зникли. Щоб і далі працювати в програмі, зверніться до адміністратора сервісу:":{"en":"Your forms are safe and nothing was lost. To keep using the app, contact the service administrator:","pl":"Twoje karty są zapisane i nic nie zginęło. Aby dalej korzystać z aplikacji, skontaktuj się z administratorem usługi:","ru":"Ваши бланки сохранены и никуда не пропали. Чтобы и дальше работать в программе, обратитесь к администратору сервиса:","es":"Sus hojas están guardadas y no se ha perdido nada. Para seguir usando la aplicación, contacte con el administrador del servicio:"},"Коли доступ відкриють, натисніть «Перевірити доступ».":{"en":"Once access is granted, tap “Check access”.","pl":"Gdy dostęp zostanie przyznany, naciśnij „Sprawdź dostęp”.","ru":"Когда доступ откроют, нажмите «Проверить доступ».","es":"Cuando se conceda el acceso, pulse «Comprobar acceso»."},"Перевірити доступ":{"en":"Check access","pl":"Sprawdź dostęp","ru":"Проверить доступ","es":"Comprobar acceso"},"Е-Монтаж":{"en":"Е-Монтаж","pl":"Е-Монтаж","ru":"Е-Монтаж","es":"Е-Монтаж"},"Заміри дверей":{"en":"Door measurements","pl":"Pomiar drzwi","ru":"Замеры дверей","es":"Medición de puertas"},"Дата та місце":{"en":"Date and place","pl":"Data i miejsce","ru":"Дата и место","es":"Fecha y lugar"},"Дата":{"en":"Date","pl":"Data","ru":"Дата","es":"Fecha"},"Магазин":{"en":"Store","pl":"Sklep","ru":"Магазин","es":"Tienda"},"Назва":{"en":"Name","pl":"Nazwa","ru":"Название","es":"Nombre"},"Адреса":{"en":"Address","pl":"Adres","ru":"Адрес","es":"Dirección"},"м. Шептицьки, вул...":{"en":"City, street...","pl":"Miasto, ulica...","ru":"Город, улица...","es":"Ciudad, calle..."},"Менеджер":{"en":"Manager","pl":"Doradca","ru":"Менеджер","es":"Comercial"},"Ім'я менеджера":{"en":"Manager name","pl":"Imię doradcy","ru":"Имя менеджера","es":"Nombre del comercial"},"Дані замовника":{"en":"Customer details","pl":"Dane klienta","ru":"Данные заказчика","es":"Datos del cliente"},"Ім'я":{"en":"Name","pl":"Imię i nazwisko","ru":"Имя","es":"Nombre"},"Іван Петренко":{"en":"John Smith","pl":"Jan Kowalski","ru":"Иван Петров","es":"Juan García"},"м., вул., №":{"en":"City, street, no.","pl":"Miasto, ulica, nr","ru":"г., ул., №","es":"Ciudad, calle, n.º"},"Телефон":{"en":"Phone","pl":"Telefon","ru":"Телефон","es":"Teléfono"},"Товар ТМ":{"en":"Product brand","pl":"Marka","ru":"Товар ТМ","es":"Marca"},"Поверх":{"en":"Floor","pl":"Piętro","ru":"Этаж","es":"Planta"},"Ліфт":{"en":"Lift","pl":"Winda","ru":"Лифт","es":"Ascensor"},"Є":{"en":"Yes","pl":"Jest","ru":"Есть","es":"Sí"},"Немає":{"en":"No","pl":"Brak","ru":"Нет","es":"No"},"Бажана дата монтажу":{"en":"Preferred installation date","pl":"Preferowana data montażu","ru":"Желаемая дата монтажа","es":"Fecha de instalación deseada"},"Виміряні проєми":{"en":"Measured openings","pl":"Zmierzone otwory","ru":"Замеренные проёмы","es":"Huecos medidos"},"Додати двері":{"en":"Add door","pl":"Dodaj drzwi","ru":"Добавить дверь","es":"Añadir puerta"},"Заміри підлоги":{"en":"Floor measurements","pl":"Pomiar podłogi","ru":"Замеры пола","es":"Medición de suelo"},"Разом":{"en":"Total","pl":"Razem","ru":"Итого","es":"Total"},"Додати кімнату":{"en":"Add room","pl":"Dodaj pomieszczenie","ru":"Добавить комнату","es":"Añadir estancia"},"Заміри плінтуса":{"en":"Skirting measurements","pl":"Pomiar listew","ru":"Замеры плинтуса","es":"Medición de rodapié"},"Нотатки":{"en":"Notes","pl":"Notatki","ru":"Заметки","es":"Notas"},"Особливості, рекомендації, матеріал стін...":{"en":"Specifics, recommendations, wall material...","pl":"Szczegóły, zalecenia, materiał ścian...","ru":"Особенности, рекомендации, материал стен...","es":"Detalles, recomendaciones, material de paredes..."},"Підпис замовника":{"en":"Customer signature","pl":"Podpis klienta","ru":"Подпись заказчика","es":"Firma del cliente"},"Підпишіться тут":{"en":"Sign here","pl":"Podpisz tutaj","ru":"Подпишитесь здесь","es":"Firme aquí"},"Очистити":{"en":"Clear","pl":"Wyczyść","ru":"Очистить","es":"Borrar"},"Друк":{"en":"Print","pl":"Drukuj","ru":"Печать","es":"Imprimir"},"Компанія:":{"en":"Company:","pl":"Firma:","ru":"Компания:","es":"Empresa:"},"Дата:":{"en":"Date:","pl":"Data:","ru":"Дата:","es":"Fecha:"},"Менеджер:":{"en":"Manager:","pl":"Doradca:","ru":"Менеджер:","es":"Comercial:"},"Магазин:":{"en":"Store:","pl":"Sklep:","ru":"Магазин:","es":"Tienda:"},"Адреса магазину:":{"en":"Store address:","pl":"Adres sklepu:","ru":"Адрес магазина:","es":"Dirección de la tienda:"},"Замовник:":{"en":"Customer:","pl":"Klient:","ru":"Заказчик:","es":"Cliente:"},"Телефон:":{"en":"Phone:","pl":"Telefon:","ru":"Телефон:","es":"Teléfono:"},"Адреса монтажу:":{"en":"Installation address:","pl":"Adres montażu:","ru":"Адрес монтажа:","es":"Dirección de instalación:"},"Товар ТМ:":{"en":"Product brand:","pl":"Marka:","ru":"Товар ТМ:","es":"Marca:"},"Поверх / ліфт:":{"en":"Floor / lift:","pl":"Piętro / winda:","ru":"Этаж / лифт:","es":"Planta / ascensor:"},"Бажана дата монтажу:":{"en":"Preferred installation date:","pl":"Preferowana data montażu:","ru":"Желаемая дата монтажа:","es":"Fecha de instalación deseada:"},"Тип":{"en":"Type","pl":"Rodzaj","ru":"Тип","es":"Tipo"},"Вис. мм":{"en":"H, mm","pl":"Wys. mm","ru":"Выс. мм","es":"Alto mm"},"Шир. мм":{"en":"W, mm","pl":"Szer. mm","ru":"Шир. мм","es":"Ancho mm"},"Стіна":{"en":"Wall","pl":"Ściana","ru":"Стена","es":"Muro"},"Полотно В×Ш":{"en":"Leaf H×W","pl":"Skrzydło W×S","ru":"Полотно В×Ш","es":"Hoja Al×An"},"Лишт.":{"en":"Casing","pl":"Opaska","ru":"Налич.","es":"Tapaj."},"Відкр.":{"en":"Side","pl":"Otw.","ru":"Откр.","es":"Apert."},"Напр.":{"en":"Swing","pl":"Kier.","ru":"Напр.","es":"Sent."},"Додатково":{"en":"Extra","pl":"Dodatkowo","ru":"Дополнительно","es":"Adicional"},"Нотатки:":{"en":"Notes:","pl":"Notatki:","ru":"Заметки:","es":"Notas:"},"Підпис замовника:":{"en":"Customer signature:","pl":"Podpis klienta:","ru":"Подпись заказчика:","es":"Firma del cliente:"},"Ручка":{"en":"Handle","pl":"Klamka","ru":"Ручка","es":"Manilla"},"Ключ-ключ":{"en":"Key–key","pl":"Klucz–klucz","ru":"Ключ–ключ","es":"Llave–llave"},"Ключ-поворотник":{"en":"Key–thumbturn","pl":"Klucz–gałka","ru":"Ключ–вертушка","es":"Llave–pomo"},"Вітальня":{"en":"Living room","pl":"Salon","ru":"Гостиная","es":"Salón"},"Спальня":{"en":"Bedroom","pl":"Sypialnia","ru":"Спальня","es":"Dormitorio"},"Кухня":{"en":"Kitchen","pl":"Kuchnia","ru":"Кухня","es":"Cocina"},"Санвузол":{"en":"Bathroom & WC","pl":"Łazienka z WC","ru":"Санузел","es":"Baño completo"},"Туалет":{"en":"Toilet","pl":"Toaleta","ru":"Туалет","es":"Aseo"},"Ванна":{"en":"Bathroom","pl":"Łazienka","ru":"Ванная","es":"Baño"},"Гардероб":{"en":"Walk-in closet","pl":"Garderoba","ru":"Гардеробная","es":"Vestidor"},"Кладова":{"en":"Storage room","pl":"Spiżarnia","ru":"Кладовая","es":"Trastero"},"Дитяча":{"en":"Kids' room","pl":"Pokój dziecięcy","ru":"Детская","es":"Habitación infantil"},"Ламінат":{"en":"Laminate","pl":"Panele laminowane","ru":"Ламинат","es":"Laminado"},"Вініл":{"en":"Vinyl","pl":"Winyl","ru":"Винил","es":"Vinilo"},"Паркетна дошка":{"en":"Engineered wood","pl":"Deska warstwowa","ru":"Паркетная доска","es":"Tarima"},"Плитка":{"en":"Tile","pl":"Płytki","ru":"Плитка","es":"Baldosa"},"Інше":{"en":"Other","pl":"Inne","ru":"Другое","es":"Otro"},"Стяжка":{"en":"Screed","pl":"Wylewka","ru":"Стяжка","es":"Solera"},"Дерев'яна":{"en":"Wooden","pl":"Drewniane","ru":"Деревянное","es":"De madera"},"Стара плитка":{"en":"Old tile","pl":"Stare płytki","ru":"Старая плитка","es":"Baldosa antigua"},"МДФ":{"en":"MDF","pl":"MDF","ru":"МДФ","es":"MDF"},"ПВХ":{"en":"PVC","pl":"PCV","ru":"ПВХ","es":"PVC"},"Дюрополімер":{"en":"Duropolymer","pl":"Duropolimer","ru":"Дюрополимер","es":"Duropolímero"},"Дерево":{"en":"Wood","pl":"Drewno","ru":"Дерево","es":"Madera"},"Цегла":{"en":"Brick","pl":"Cegła","ru":"Кирпич","es":"Ladrillo"},"Бетон":{"en":"Concrete","pl":"Beton","ru":"Бетон","es":"Hormigón"},"Газоблок":{"en":"Aerated block","pl":"Gazobeton","ru":"Газоблок","es":"Hormigón celular"},"Гіпсокартон":{"en":"Drywall","pl":"Płyta g-k","ru":"Гипсокартон","es":"Pladur"},"Стандарт":{"en":"Standard","pl":"Standard","ru":"Стандарт","es":"Estándar"},"Нестандарт":{"en":"Non-standard","pl":"Niestandard","ru":"Нестандарт","es":"No estándar"},"Підготують до стандарту":{"en":"Will be made standard","pl":"Dostosują do standardu","ru":"Подготовят под стандарт","es":"Se adaptará al estándar"},"Адміністратор":{"en":"Administrator","pl":"Administrator","ru":"Администратор","es":"Administrador"},"Клієнт":{"en":"Client","pl":"Klient","ru":"Клиент","es":"Cliente"},"Безкоштовно":{"en":"Free","pl":"Bezpłatnie","ru":"Бесплатно","es":"Gratis"},"Логотип":{"en":"Logo","pl":"Logo","ru":"Логотип","es":"Logotipo"},"PNG або JPG, найкраще на прозорому чи білому фоні. Показується вгорі програми і на бланку для друку.":{"en":"PNG or JPG, ideally on a transparent or white background. Shown at the top of the app and on the printed form.","pl":"PNG lub JPG, najlepiej na przezroczystym lub białym tle. Wyświetla się u góry aplikacji i na wydruku karty.","ru":"PNG или JPG, лучше на прозрачном или белом фоне. Показывается вверху программы и на бланке для печати.","es":"PNG o JPG, mejor con fondo transparente o blanco. Se muestra arriba en la aplicación y en la hoja impresa."},"Завантажити":{"en":"Upload","pl":"Wgraj","ru":"Загрузить","es":"Subir"},"Змінити":{"en":"Change","pl":"Zmień","ru":"Изменить","es":"Cambiar"},"✅ Логотип збережено":{"en":"✅ Logo saved","pl":"✅ Logo zapisane","ru":"✅ Логотип сохранён","es":"✅ Logotipo guardado"},"🗑 Логотип видалено":{"en":"🗑 Logo removed","pl":"🗑 Logo usunięte","ru":"🗑 Логотип удалён","es":"🗑 Logotipo eliminado"},"⚠️ Не вдалося прочитати зображення":{"en":"⚠️ Could not read the image","pl":"⚠️ Nie udało się odczytać obrazu","ru":"⚠️ Не удалось прочитать изображение","es":"⚠️ No se pudo leer la imagen"},"Назад":{"en":"Back","pl":"Wstecz","ru":"Назад","es":"Atrás"}};
 var LANG = (function() {
   try { var saved = localStorage.getItem('zamir_lang'); if (LANGS[saved]) return saved; } catch (e) {}
   var n = ((navigator.languages && navigator.languages[0]) || navigator.language || 'uk').slice(0, 2).toLowerCase();
@@ -1510,10 +1670,54 @@ function T(s) {
   return (e && e[LANG]) || s;
 }
 
-function langOptions() {
-  return Object.keys(LANGS).map(function(l) {
-    return '<option value="' + l + '"' + (l === LANG ? ' selected' : '') + '>' + LANGS[l] + '</option>';
+/* Прапори (SVG, однаково виглядають на всіх телефонах і комп'ютерах) */
+var FLAGS = {
+  uk: '<svg viewBox="0 0 3 2" preserveAspectRatio="none"><rect width="3" height="1" fill="#0057B7"/><rect y="1" width="3" height="1" fill="#FFD700"/></svg>',
+  en: '<svg viewBox="0 0 60 40" preserveAspectRatio="xMidYMid slice"><rect width="60" height="40" fill="#012169"/><path d="M0,0L60,40M60,0L0,40" stroke="#fff" stroke-width="8"/><path d="M0,0L60,40M60,0L0,40" stroke="#C8102E" stroke-width="3"/><path d="M30,0V40M0,20H60" stroke="#fff" stroke-width="12"/><path d="M30,0V40M0,20H60" stroke="#C8102E" stroke-width="7"/></svg>',
+  pl: '<svg viewBox="0 0 3 2" preserveAspectRatio="none"><rect width="3" height="1" fill="#fff"/><rect y="1" width="3" height="1" fill="#DC143C"/></svg>',
+  ru: '<svg viewBox="0 0 3 3" preserveAspectRatio="none"><rect width="3" height="3" fill="#fff"/><rect y="1" width="3" height="1" fill="#1D5DB4"/></svg>',
+  es: '<svg viewBox="0 0 3 4" preserveAspectRatio="none"><rect width="3" height="4" fill="#AA151B"/><rect y="1" width="3" height="2" fill="#F1BF00"/></svg>'
+};
+
+function langBtnInner() {
+  return '<span class="flag">' + FLAGS[LANG] + '</span><span class="lang-name">' + LANGS[LANG] + '</span>' +
+    '<svg class="chev" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+}
+
+function closeLangMenu() {
+  ['langMenu', 'langBackdrop'].forEach(function(id) {
+    var e = document.getElementById(id);
+    if (e) e.remove();
+  });
+}
+
+function openLangMenu(btn) {
+  closeLangMenu();
+  var bd = document.createElement('div');
+  bd.className = 'lang-backdrop';
+  bd.id = 'langBackdrop';
+  bd.onclick = closeLangMenu;
+  var m = document.createElement('div');
+  m.className = 'lang-menu';
+  m.id = 'langMenu';
+  m.setAttribute('role', 'listbox');
+  m.innerHTML = Object.keys(LANGS).map(function(l) {
+    return '<button type="button" role="option" class="lang-item' + (l === LANG ? ' on' : '') + '" onclick="pickLang(\'' + l + '\')">' +
+      '<span class="flag">' + FLAGS[l] + '</span><span class="lang-name">' + LANGS[l] + '</span><span class="lang-check">✓</span></button>';
   }).join('');
+  document.body.appendChild(bd);
+  document.body.appendChild(m);
+  var r = btn.getBoundingClientRect(), mw = m.offsetWidth, mh = m.offsetHeight;
+  var left = Math.max(8, Math.min(r.right - mw, innerWidth - mw - 8));
+  var top = r.bottom + 6;
+  if (top + mh > innerHeight - 8) top = Math.max(8, r.top - mh - 6);
+  m.style.left = left + 'px';
+  m.style.top = top + 'px';
+}
+
+function pickLang(l) {
+  closeLangMenu();
+  setLang(l);
 }
 
 function applyLang() {
@@ -1522,10 +1726,7 @@ function applyLang() {
   document.querySelectorAll('[data-t]').forEach(function(e) { e.textContent = T(e.getAttribute('data-t')); });
   document.querySelectorAll('[data-tp]').forEach(function(e) { e.placeholder = T(e.getAttribute('data-tp')); });
   document.querySelectorAll('[data-ta]').forEach(function(e) { e.setAttribute('aria-label', T(e.getAttribute('data-ta'))); });
-  document.querySelectorAll('.lang-sel').forEach(function(sel) {
-    if (!sel.options.length) sel.innerHTML = langOptions();
-    sel.value = LANG;
-  });
+  document.querySelectorAll('.lang-btn').forEach(function(b) { b.innerHTML = langBtnInner(); });
 }
 
 function setLang(l) {
@@ -2356,18 +2557,7 @@ function plinthsTable(list) {
   return printTable(T('Плінтус'), ['№',T('Кімната'),T('Периметр, м'),T('Прорізи, м'),T('Плінтуса, м'),T('Матеріал'),T('Висота, мм'),T('Внутр. кути'),T('Зовн. кути'),T('Демонт.'),T('Примітка')], rows, foot);
 }
 
-function printDoc() {
-  preparePrint();
-
-  var el = document.getElementById('printable');
-  var content = el.innerHTML;
-
-  var html = '<!DOCTYPE html><html lang="' + LANG + '"><head>' +
-    '<meta charset="UTF-8">' +
-    '<meta name="viewport" content="width=device-width,initial-scale=1">' +
-    '<title>' + T('Бланк замірів') + '</title>' +
-    '<style>' +
-    '@page{size:A4 landscape;margin:8mm;}' +
+var PRINT_CSS = '@page{size:A4 landscape;margin:8mm;}' +
     '*{box-sizing:border-box;margin:0;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact;}' +
     'body{font-family:Arial,sans-serif;font-size:10pt;color:#000;background:#fff;}' +
     'h1{font-size:15pt;font-weight:700;text-align:center;line-height:30pt;margin-bottom:6pt;}' +
@@ -2389,17 +2579,138 @@ function printDoc() {
     '.photo-print .photos-wrap{display:flex;flex-wrap:wrap;gap:8pt;margin-top:6pt;}' +
     '.photo-print .photo-item{display:inline-block;text-align:center;}' +
     '.photo-print img{display:block;width:75pt;height:75pt;object-fit:cover;border-radius:4pt;border:0.5pt solid #ccc;}' +
-    '.photo-print .photo-cap{font-size:7pt;color:#333;margin-top:2pt;max-width:75pt;}' +
-    '</style></head><body>' +
-    content +
-    '<script>window.onload=function(){window.print();window.onafterprint=function(){window.close();};};<\/script>' +
-    '</body></html>';
+    '.photo-print .photo-cap{font-size:7pt;color:#333;margin-top:2pt;max-width:75pt;}';
 
-  var w = window.open('', '_blank', 'width=900,height=700');
-  if (!w) { showToast(T('⚠️ Дозвольте спливаючі вікна')); return; }
-  w.document.open();
-  w.document.write(html);
-  w.document.close();
+var lastPrintHtml = '';
+var lastPrintBody = '';
+
+function buildPrintHtml() {
+  preparePrint();
+  lastPrintBody = document.getElementById('printable').innerHTML;
+  lastPrintHtml = '<!DOCTYPE html><html lang="' + LANG + '"><head>' +
+    '<meta charset="UTF-8">' +
+    '<meta name="viewport" content="width=device-width,initial-scale=1">' +
+    '<title>' + T('Бланк замірів') + '</title>' +
+    '<style>' + PRINT_CSS + '</style></head><body>' + lastPrintBody + '</body></html>';
+  return lastPrintHtml;
+}
+
+/* ── Перегляд бланка: Назад / масштаб / Друк, збільшення пальцями ── */
+var PV_W = 1123;           /* ширина аркуша A4 (альбомний), px */
+var pvScale = 1, pvFit = 1, pvH = 794, pvInHistory = false;
+
+function printDoc() {
+  buildPrintHtml();
+  var pv = document.getElementById('preview');
+  var fr = document.getElementById('pvFrame');
+  pv.hidden = false;
+  document.body.classList.add('pv-open');
+  if (!pvInHistory) {
+    try { history.pushState({ preview: 1 }, ''); pvInHistory = true; } catch (e) {}
+  }
+  fr.onload = function() {
+    try {
+      var d = fr.contentDocument;
+      pvH = Math.max(794, d.documentElement.scrollHeight, d.body.scrollHeight);
+    } catch (e) { pvH = 794; }
+    fr.style.height = pvH + 'px';
+    var sc = document.getElementById('pvScroll');
+    pvFit = Math.min(1, (sc.clientWidth - 24) / PV_W);
+    setPvScale(pvFit);
+    sc.scrollTop = 0;
+    sc.scrollLeft = 0;
+  };
+  fr.srcdoc = lastPrintHtml.replace('</head>', '<style>@media screen{body{padding:28px 30px;}}</style></head>');
+}
+
+function hidePreview() {
+  document.getElementById('preview').hidden = true;
+  document.body.classList.remove('pv-open');
+}
+
+function closePreview() {
+  hidePreview();
+  if (pvInHistory) {
+    pvInHistory = false;
+    try { history.back(); } catch (e) {}
+  }
+}
+
+window.addEventListener('popstate', function() {
+  if (pvInHistory) { pvInHistory = false; hidePreview(); }
+});
+
+function setPvScale(s, cx, cy) {
+  var sc = document.getElementById('pvScroll');
+  s = Math.max(pvFit, Math.min(3, s));
+  if (cx == null) { cx = sc.clientWidth / 2; cy = sc.clientHeight / 2; }
+  var px = (sc.scrollLeft + cx) / pvScale, py = (sc.scrollTop + cy) / pvScale;
+  pvScale = s;
+  var page = document.getElementById('pvPage');
+  page.style.width = Math.round(PV_W * s) + 'px';
+  page.style.height = Math.round(pvH * s) + 'px';
+  document.getElementById('pvFrame').style.transform = 'scale(' + s + ')';
+  sc.scrollLeft = px * s - cx;
+  sc.scrollTop = py * s - cy;
+  document.getElementById('pvZoom').textContent = Math.round(s * 100) + '%';
+}
+
+function zoomPreview(dir) {
+  setPvScale(dir > 0 ? pvScale * 1.3 : pvScale / 1.3);
+}
+
+(function() {
+  var startDist = 0, startScale = 1, lastTap = 0;
+  function dist(t) { return Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY); }
+  function mid(t, el) {
+    var r = el.getBoundingClientRect();
+    return { x: (t[0].clientX + t[1].clientX) / 2 - r.left, y: (t[0].clientY + t[1].clientY) / 2 - r.top };
+  }
+  document.addEventListener('DOMContentLoaded', function() {
+    var sc = document.getElementById('pvScroll');
+    sc.addEventListener('touchstart', function(e) {
+      if (e.touches.length === 2) { startDist = dist(e.touches); startScale = pvScale; }
+    }, { passive: true });
+    sc.addEventListener('touchmove', function(e) {
+      if (e.touches.length === 2 && startDist) {
+        e.preventDefault();
+        var m = mid(e.touches, sc);
+        setPvScale(startScale * dist(e.touches) / startDist, m.x, m.y);
+      }
+    }, { passive: false });
+    sc.addEventListener('touchend', function(e) {
+      if (e.touches.length < 2) startDist = 0;
+      if (e.changedTouches.length === 1 && e.touches.length === 0) {
+        var now = Date.now();
+        if (now - lastTap < 300) {
+          var r = sc.getBoundingClientRect(), t = e.changedTouches[0];
+          setPvScale(pvScale > pvFit * 1.05 ? pvFit : Math.max(1, pvFit * 2), t.clientX - r.left, t.clientY - r.top);
+          lastTap = 0;
+        } else lastTap = now;
+      }
+    });
+    sc.addEventListener('wheel', function(e) {
+      if (!e.ctrlKey) return;
+      e.preventDefault();
+      var r = sc.getBoundingClientRect();
+      setPvScale(pvScale * (e.deltaY < 0 ? 1.1 : 1 / 1.1), e.clientX - r.left, e.clientY - r.top);
+    }, { passive: false });
+  });
+})();
+
+function printPreview() {
+  /* Додаток для Android: системний друк / збереження в PDF */
+  if (window.AndroidApp && AndroidApp.print) { AndroidApp.print(lastPrintHtml); return; }
+  document.getElementById('printHost').innerHTML = lastPrintBody;
+  var st = document.getElementById('printStyle');
+  if (!st) {
+    st = document.createElement('style');
+    st.id = 'printStyle';
+    document.head.appendChild(st);
+  }
+  st.textContent = '@media print{body>*:not(#printHost){display:none!important}#printHost{display:block!important}' +
+    'html,body{padding:0!important;margin:0!important;background:#fff!important}' + PRINT_CSS + '}';
+  window.print();
 }
 
 /* ───── SHARE ───── */
@@ -2476,7 +2787,9 @@ function shareTxt() {
 
   if (gv('notes')) text += T('\n📝 Нотатки: ') + gv('notes') + '\n';
 
-  if (navigator.share) {
+  if (window.AndroidApp && AndroidApp.share) {
+    AndroidApp.share(T('Бланк замірів'), text);
+  } else if (navigator.share) {
     navigator.share({ title: T('Бланк замірів'), text: text }).catch(function(){});
   } else {
     navigator.clipboard && navigator.clipboard.writeText(text).then(function() {
@@ -2650,14 +2963,32 @@ async function recheckAccess() {
 /* ── Аркуш (модальне вікно) ── */
 function closeBtnHtml() { return '<button class="modal-btn modal-btn-secondary" onclick="closeModal()">' + T('Закрити') + '</button>'; }
 
+/* Кнопка «Назад» (Android, браузер) закриває відкрите вікно, а не програму */
+var sheetInHistory = false;
+window.addEventListener('popstate', function() {
+  if (sheetInHistory) {
+    sheetInHistory = false;
+    document.getElementById('modal').classList.remove('show');
+  }
+});
+
 function openSheet(title, html, btns) {
+  if (!sheetInHistory) {
+    try { history.pushState({ sheet: 1 }, ''); sheetInHistory = true; } catch (e) {}
+  }
   document.getElementById('modalTitle').textContent = title;
   document.getElementById('modalMsg').innerHTML = html;
   document.getElementById('modalBtns').innerHTML = btns || closeBtnHtml();
   document.getElementById('modal').classList.add('show');
 }
 
-function closeModal() { document.getElementById('modal').classList.remove('show'); }
+function closeModal() {
+  document.getElementById('modal').classList.remove('show');
+  if (sheetInHistory) {
+    sheetInHistory = false;
+    try { history.back(); } catch (e) {}
+  }
+}
 
 function confirmSheet(title, msg, okText, okCall, danger) {
   openSheet(title, '<p>' + h(msg) + '</p>',
@@ -2678,7 +3009,7 @@ function openProfile() {
     '<div class="ios-card">' +
       row(T('Компанія'), '<input type="text" id="pf_company" value="' + esc(p.company) + '" placeholder="' + T('Назва компанії') + '" onchange="saveCompany(this.value)">') +
       row('Email', '<div class="info-val">' + h(p.email) + '</div>') +
-      row(T('Мова'), '<select class="lang-sel" id="pf_lang" onchange="setLang(this.value)">' + langOptions() + '</select>') +
+      row(T('Мова'), '<button type="button" class="lang-btn inline" id="pf_lang" onclick="openLangMenu(this)" aria-label="Language">' + langBtnInner() + '</button>') +
       row(T('Тариф'), '<div class="info-val strong">' + h(plan) + '</div>') +
     '</div>' +
     (p.role === 'admin' ? '' :
